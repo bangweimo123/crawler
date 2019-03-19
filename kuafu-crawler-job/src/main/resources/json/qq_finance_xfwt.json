@@ -1,0 +1,101 @@
+{
+	"comment" : "腾讯财经-消费问题",
+	"domainTag" : "qq_finance_xfwt",
+	"crawlerBaseInfo" : 
+	{
+		"baseUrl" : "http://finance.qq.com/xfwt.htm",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" : 
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.qq.finance.xfwt"
+		},
+
+		{
+			"type" : "time",
+			"value" : ""
+		}
+	],
+
+	"site" : 
+	{
+		"charset" : "gb2312",
+		"timeOut" : 30000
+	},
+
+
+	"urlBuilder" : 
+	{
+
+		"baseUrlFilter" : "((http://finance\\.qq\\.com/a/\\d+/\\d+.htm)|(http://finance\\.qq\\.com/c/xfwtlist_[1-9]\\d*\\.htm)|(http://finance\\.qq\\.com/xfwt\\.htm))",
+
+		"urlFilterPlugins" : 
+		{
+		  "(http://finance\\.qq\\.com/xfwt\\.htm)" : "(http://finance\\.qq\\.com/a/\\d+/\\d+.htm)",
+		  "(http://finance\\.qq\\.com/c/xfwtlist_[1-9]\\d*\\.htm)" : "(http://finance\\.qq\\.com/a/\\d+/\\d+.htm)"
+		}
+	},
+
+
+	"fieldBuilder" : 
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,| "
+		},
+
+		{
+			"fieldName" : "title",
+			"xpathSelector" : "//div[@class='hd']/h1/text()",
+			"isList" : false
+		},
+
+		{
+		  "fieldName" : "tag",
+		  "cssSelector" : "#navList a.cur",
+		  "cssSelectorAttrName" : "text",
+		  "isList" : false
+		},
+
+		{
+			"fieldName" : "source",
+			"xpathSelector" : "//span[@class='where color-a-1']/a/text()|//span[@class='where color-a-1']/text()",
+			"isList" : false
+		},
+
+		{
+
+			"fieldName" : "date",
+			"xpathSelector" : "//span[@class='pubTime article-time']/text()",
+			"isList" : false,
+			"converter" : "dateConverter",
+			"converterParam" : "yyyy-MM-dd"
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : "#Cnt-Main-Article-QQ",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"cssSelector" : "#Cnt-Main-Article-QQ img",
+			"cssSelectorAttrName" : "src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

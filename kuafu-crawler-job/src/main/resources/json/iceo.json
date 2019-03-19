@@ -1,0 +1,109 @@
+{
+	"comment" : "中国企业家网",
+	"domainTag" : "iceo",
+	"crawlerBaseInfo" : 
+	{
+		"baseUrl" : "http://www.iceo.com.cn",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" : 
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.iceo"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 6 * * ?"
+		}
+	],
+
+	"site" : 
+	{
+		"charset" : "UTF-8",
+		"timeOut" : 30000,
+		"acceptStatCode" : 
+		[
+			200,
+			302
+		]
+	},
+
+	"urlBuilder" : 
+	{
+		"urlFilterPlugins" : 
+		{
+			"(http://www\\.iceo\\.com\\.cn/\\w+/)" : "(http://www\\.iceo\\.com\\.cn/\\w+/\\d+/\\d+/\\d+.shtml)"
+		},
+
+		"baseCount" : 3000
+	},
+
+	"fieldBuilder" : 
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,| "
+		},
+
+		{
+			"fieldName" : "author",
+			"xpathSelector" : "//div[@class='info_div']/div[@class='info']/span[1]/*/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "title",
+			"xpathSelector" : "//div[@class='act_tit']/h1/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "source",
+			"xpathSelector" : "//div[@class='info_div']/div[@class='info']/span[2]/i/*/text()",
+			"isList" : false,
+			"defaultValue" : "中国企业家网"
+		},
+
+		{
+			"fieldName" : "date",
+			"xpathSelector" : "//div[@class='info_div']/div[@class='info']/span[1]/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data};  return data.substring(0,16)}",
+			"converter" : "dateConverter",
+			"converterParam" : "yyyy-MM-dd HH:mm"
+		},
+
+		{
+			"fieldName" : "summary",
+			"xpath2Selector" : "//div[@id='ctrlfscont']/p[position()<3]//text()",
+			"isList" : true,
+			"script" : "function dataConverter(data){ if(null==data){return data}; var returnStr='';for(var i=0;i<data.size();i++){var str=data.get(i);returnStr=returnStr+str;} return returnStr;}",
+			"converter" : "stringTrimConverter"
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : "#ctrlfscont",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"xpath2Selector" : "//div[@id='ctrlfscont']//img/@src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

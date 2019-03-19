@@ -1,0 +1,51 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.dianping.merchant</groupId>
+		<artifactId>merchant-robot-crawler</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>merchant-robot-crawler-biz</artifactId>
+	<name>merchant-robot-crawler-biz</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.dianping.platform</groupId>
+			<artifactId>platform-sdk</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dianping.merchant</groupId>
+			<artifactId>merchant-robot-crawler-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dianping.merchant</groupId>
+			<artifactId>merchant-today-news-background-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dianping.piccenter</groupId>
+			<artifactId>piccenter-upload-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dianping.merchant</groupId>
+			<artifactId>merchant-robot-crawler-encode</artifactId>
+		</dependency>
+		<!-- for Test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+		</dependency>
+	</dependencies>
+</project>

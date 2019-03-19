@@ -1,0 +1,100 @@
+{
+	"comment" : "中国经济网-汽车频道",
+	"domainTag" : "ce_auto",
+	"crawlerBaseInfo" :
+	{
+		"baseUrl" : "http://auto.ce.cn",
+		"threadCount" : 20,
+		"downloaderPlugins":{"http://auto\\.ce\\.cn/auto/[a-zA-Z]+/":"jsDownloader","http://auto\\.ce\\.cn/auto/[a-zA-Z]+/index\\_\\d+\\.shtml":"jsDownloader"}
+
+	},
+
+	"crawlerTrigger" :
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.ce.auto"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 2 * * ?"
+		}
+	],
+
+	"site" :
+	{
+		"charset" : "gb2312",
+		"timeOut" : 30000
+	},
+
+
+	"urlBuilder" :
+	{
+
+		"baseUrlFilter" : "((http://auto\\.ce\\.cn/auto/gundong/\\d+/\\d+/t\\d+\\_\\d+\\.shtml)|(http://auto\\.ce\\.cn/auto/[a-zA-Z]+/index\\_\\d+\\.shtml)|(http://auto\\.ce\\.cn/auto/[a-zA-Z]+/))",
+
+		"urlFilterPlugins" :
+		{
+		  "(http://auto\\.ce\\.cn/auto/[a-zA-Z]+/)" : "((http://auto\\.ce\\.cn/auto/gundong/\\d+/\\d+/t\\d+\\_\\d+\\.shtml)|(http://auto\\.ce\\.cn/auto/[a-zA-Z]+/index\\_\\d+\\.shtml))",
+		  "(http://auto\\.ce\\.cn/auto/[a-zA-Z]+/index\\_\\d+\\.shtml)" : "((http://auto\\.ce\\.cn/auto/gundong/\\d+/\\d+/t\\d+\\_\\d+\\.shtml)|(http://auto\\.ce\\.cn/auto/[a-zA-Z]+/index\\_\\d+\\.shtml))"
+		},
+
+		"baseCount" : 8000
+	},
+
+
+	"fieldBuilder" :
+	[
+	  {
+		"fieldName" : "keyword",
+		"xpathSelector" : "//meta[@name='KEYWords']/@content",
+		"isList" : false,
+		"converter" : "stringSplitConverter",
+		"converterParam" : "\\?;| "
+	  },
+
+	  {
+		"fieldName" : "title",
+		"xpathSelector" : "//h1[@id='articleTitle']/text()",
+		"isList" : false
+	  },
+
+	  {
+		"fieldName" : "source",
+		"xpathSelector" : "//span[@id='articleSource']/text()",
+		"isList" : false,
+		"script" : "function dataConverter(data){ if(null==data){return data}; index = data.indexOf(' '); if(index!=-1){return data.substring(data.indexOf('：')+1,index)}; return data.substring(data.indexOf('：')+1,data.length)}",
+		"converter" : "stringTrimConverter"
+	  },
+
+	  {
+
+		"fieldName" : "date",
+		"xpathSelector" : "//span[@id='articleTime']/text()",
+		"isList" : false,
+		"script" : "function dataConverter(data){ if(null==data){return data};return data.replace(/年/g,'-').replace(/月/g,'-').replace(/日/g,'');}",
+		"converter" : "dateConverter"
+	  },
+
+	  {
+		"fieldName" : "thumbnail",
+		"cssSelector" : ".TRS_Editor img",
+		"cssSelectorAttrName" : "src",
+		"isList" : false,
+		"converter" : "imgConverter"
+	  },
+
+	  {
+		"fieldName" : "content",
+		"cssSelector" : ".TRS_Editor",
+		"cssSelectorAttrName" : "innerhtml",
+		"isList" : false
+	  }
+	]
+}

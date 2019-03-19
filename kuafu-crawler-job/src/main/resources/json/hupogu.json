@@ -1,0 +1,99 @@
+{
+	"comment" : "琥珀谷",
+	"domainTag" : "hupogu",
+	"crawlerBaseInfo" : 
+	{
+		"baseUrl" : "http://www.hupogu.com",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" : 
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.hupogu"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 1 * * ?"
+		}
+	],
+
+	"site" : 
+	{
+		"charset" : "UTF-8",
+		"timeOut" : 50000
+	},
+
+	"urlBuilder" : 
+	{
+		"baseUrlFilter" : "((http://www\\.hupogu\\.com/topics/\\d+)|(http://www\\.hupogu\\.com/S/ZHB\\:\\S+))",
+		"urlFilterPlugins" : 
+		{
+			"(http://www\\.hupogu\\.com)" : "((http://www\\.hupogu\\.com/topics/\\d+)|(http://www\\.hupogu\\.com/S/ZHB\\:\\S+))",
+			"(http://www\\.hupogu\\.com/S/ZHB\\:\\S+)" : "(http://www\\.hupogu\\.com/topics/\\d+)"
+		},
+
+		"baseCount" : 5000
+	},
+
+	"fieldBuilder" : 
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='Keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,| "
+		},
+
+		{
+			"fieldName" : "title",
+			"xpathSelector" : "//div[@class='feedCell feedP']//center[1]/b/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "source",
+			"defaultValue" : "琥珀谷"
+		},
+
+		{
+			"fieldName" : "date",
+			"xpathSelector" : "//div[@class='mycome']/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data};data=data.trim();if(data.indexOf('年')<0){data='2016年'+data};data=data.substring(0,18); return data;}",
+			"converter" : "dateConverter",
+			"converterParam" : "yyyy年MM月dd日 HH时mm分"
+		},
+
+		{
+			"fieldName" : "summary",
+			"xpath2Selector" : "//div[@class='feedCell feedP']/span/br[4]/preceding-sibling::text()|//div[@class='feedCell feedP']/span/br[4]/preceding-sibling::*/text()",
+			"isList" : true,
+			"script" : "function dataConverter(data){ if(null==data){return data}; var returnStr='';for(var i=0;i<data.size();i++){var str=data.get(i);returnStr=returnStr+str;} return returnStr;}",
+			"converter" : "stringTrimConverter"
+		},
+
+		{
+			"fieldName" : "content",
+			"xpath2Selector" : "//div[@class='feedCell feedP']/span/br[1]/following-sibling::node()/.",
+			"isList" : true,
+			"script" : "function dataConverter(data){ if(null==data){return data}; var returnStr='';for(var i=0;i<data.size();i++){var str=data.get(i);returnStr=returnStr+str;} return returnStr;}"
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"cssSelector" : ".feedCell.feedP img",
+			"cssSelectorAttrName" : "src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

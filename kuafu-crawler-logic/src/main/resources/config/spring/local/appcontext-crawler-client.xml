@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+	<bean id="todayNewPageInfoService" class="com.dianping.dpsf.spring.ProxyBeanFactory" init-method="init">
+		<property name="serviceName" value="http://service.dianping.com/merchant/news/pageInfoExternalService/PageInfoExternalService_1.0.0" />
+		<property name="iface" value="com.dianping.merchant.news.background.api.external.service.PageInfoExternalService" />
+		<property name="serialize" value="hessian" />
+		<property name="callMethod" value="sync" />
+		<property name="timeout" value="3000" />
+	</bean>
+	<bean id="todayNewUrlService" class="com.dianping.dpsf.spring.ProxyBeanFactory" init-method="init">
+		<property name="serviceName" value="http://service.dianping.com/merchant/news/urlService/URLService_1.0.0" />
+		<property name="iface" value="com.dianping.merchant.news.background.api.service.URLService" />
+		<property name="serialize" value="hessian" />
+		<property name="callMethod" value="sync" />
+		<property name="timeout" value="3000" />
+	</bean>
+	<bean id="todayNewKeywordService" class="com.dianping.dpsf.spring.ProxyBeanFactory" init-method="init">
+		<property name="serviceName" value="http://service.dianping.com/merchant/news/keywordExternalService/KeywordExternalService_1.0.0" />
+		<property name="iface" value="com.dianping.merchant.news.background.api.external.service.KeywordExternalService" />
+		<property name="serialize" value="hessian" />
+		<property name="callMethod" value="sync" />
+		<property name="timeout" value="3000" />
+	</bean>
+
+</beans>

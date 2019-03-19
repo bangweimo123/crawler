@@ -1,0 +1,99 @@
+{
+	"comment" : "中华餐饮网",
+	"domainTag" : "zhcyw",
+	"crawlerBaseInfo" : 
+	{
+		"baseUrl" : "http://www.cffw.net/Item/list.asp?id=1",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" : 
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.zhcyw"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 10 * * ?"
+		}
+	],
+
+	"site" : 
+	{
+		"charset" : "GBK",
+		"timeOut" : 10000
+	},
+
+	"urlBuilder" : 
+	{
+		"baseUrlFilter" : "((http://www\\.cffw\\.net/zhkcw/\\w+\\.html)|(http://www\\.cffw\\.net/Item/list.asp\\?id=[1-5]{1}[&page=\\w+]*))",
+		"urlFilterPlugins" : 
+		{
+			"(http://www\\.cffw\\.net/Item/list.asp\\?id=[1-5]{1}[&page=\\w+]*)" : "(http://www\\.cffw\\.net/zhkcw/\\w+\\.html)"
+		},
+
+		"baseCount" : 2000
+	},
+
+	"fieldBuilder" : 
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='Keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,| "
+		},
+
+		{
+			"fieldName" : "title",
+			"xpathSelector" : "//td[@class='con_border']/table/tbody/tr[2]/td[2]/h3/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "source",
+			"xpathSelector" : "//td[@class='con_border']/table/tbody/tr[3]/td[2]/p[1]/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data};  return data.substring(4,data.length)}"
+		},
+
+		{
+			"fieldName" : "date",
+			"xpathSelector" : "//td[@class='con_border']/table/tbody/tr[3]/td[2]/p[2]/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data};return data.replace(/年/g,'-').replace(/月/g,'-').replace(/日/g,'');}",
+			"converter" : "dateConverter"
+		},
+
+		{
+			"fieldName" : "summary",
+			"xpath2Selector" : "//div[@id='MyContent']/br[1]/preceding-sibling::text()|//div[@id='MyContent']/br[1]/preceding-sibling::*/text()",
+			"isList" : true,
+			"script" : "function dataConverter(data){ if(null==data){return data}; var returnStr='';for(var i=0;i<data.size();i++){var str=data.get(i);returnStr=returnStr+str;} return returnStr;}",
+			"converter" : "stringTrimConverter"
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : "#MyContent",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"cssSelector" : "#MyContent img",
+			"cssSelectorAttrName" : "src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

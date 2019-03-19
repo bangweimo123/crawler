@@ -1,0 +1,96 @@
+{
+	"comment" : "网易-科技频道",
+	"domainTag" : "163tech",
+	"crawlerBaseInfo" :
+	{
+		"baseUrl" : "http://tech.163.com",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" :
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.163.tech"
+		},
+
+		{
+			"type" : "time",
+			"value" : ""
+		}
+	],
+
+	"site" :
+	{
+		"charset" : "gbk",
+		"timeOut" : 30000
+	},
+
+
+	"urlBuilder" :
+	{
+
+		"baseUrlFilter" : "((http://tech\\.163\\.com//\\d+/\\d+/\\d+/\\w+\\.html)|(http://tech\\.163\\.com/\\d+/\\d+/\\d+/\\w+\\.html)|(http://tech\\.163\\.com/special/gd2014)|(http://tech\\.163\\.com/\\w+)|(http://tech\\.163\\.com))",
+
+		"urlFilterPlugins" :
+		{
+		  "(http://tech\\.163\\.com)" : "((http://tech\\.163\\.com//\\d+/\\d+/\\d+/\\w+\\.html)|(http://tech\\.163\\.com/\\d+/\\d+/\\d+/\\w+\\.html)|(http://tech\\.163\\.com/special/gd2014)|(http://tech\\.163\\.com/\\w+))",
+		  "(http://tech\\.163\\.com/special/gd2014)" : "((http://tech\\.163\\.com/\\d+/\\d+/\\d+/\\w+\\.html)|(http://tech\\.163\\.com/special/gd2014\\_\\d+))",
+		  "(http://tech\\.163\\.com/\\w+)" : "((http://tech\\.163\\.com/\\d+/\\d+/\\d+/\\w+\\.html)|(http://tech\\.163\\.com/special/0009rt/tech\\_\\w+\\_\\d+\\.html))"
+		}
+	},
+
+
+	"fieldBuilder" :
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,|"
+		},
+
+		{
+			"fieldName" : "title",
+			"xpathSelector" : "//h1[@id='h1title']/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "source",
+			"xpathSelector" : "//a[@id='ne_article_source']/text()",
+			"isList" : false
+		},
+
+		{
+
+			"fieldName" : "date",
+			"xpathSelector" : "//div[@class='ep-time-soure cDGray']/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data}; index = data.indexOf('来源'); return data.substring(0,index)}",
+			"converter" : "dateConverter",
+			"converterParam" : "yyyy-MM-dd"
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : "#endText",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"cssSelector" : "#endText img",
+			"cssSelectorAttrName" : "src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

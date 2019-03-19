@@ -1,0 +1,105 @@
+{
+	"comment" : "凤凰网-汽车频道-新闻",
+	"domainTag" : "ifeng_xinwen",
+	"crawlerBaseInfo" :
+	{
+		"baseUrl" : "http://auto.ifeng.com/xinwen/",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" :
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.ifeng.xinwen"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 1,7,13,19 * * ?"
+		}
+	],
+
+	"site" :
+	{
+		"charset" : "utf-8",
+		"timeOut" : 30000
+	},
+
+
+	"urlBuilder" :
+	{
+
+		"baseUrlFilter" : "((http://auto\\.ifeng\\.com/xinwen/\\d+/\\d+\\.shtml)|(http://auto\\.ifeng\\.com/xinwen/\\d+\\.shtml)|(http://auto\\.ifeng\\.com/xinwen))",
+
+		"urlFilterPlugins" :
+		{
+		  "(http://auto\\.ifeng\\.com/xinwen/)" : "((http://auto\\.ifeng\\.com/xinwen/\\d+/\\d+\\.shtml)|(http://auto\\.ifeng\\.com/xinwen/\\d+\\.shtml))",
+		  "(http://auto\\.ifeng\\.com/xinwen/\\d+\\.shtml)" : "((http://auto\\.ifeng\\.com/xinwen/\\d+\\.shtml)|(http://auto\\.ifeng\\.com/xinwen/\\d+/\\d+\\.shtml))"
+		},
+
+		"baseCount" : 6000
+	},
+
+
+	"fieldBuilder" :
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,| "
+		},
+
+		{
+			"fieldName" : "title",
+			"xpathSelector" : "//div[@class='arl-cont']/h3/text()",
+			"isList" : false
+		},
+
+		{
+		  "fieldName" : "author",
+		  "xpathSelector" : "//span[@id='author_baidu']/text()",
+		  "isList" : false,
+		  "script" : "function dataConverter(data){ if(null==data){return data};return data.substring(3,data.length)}"
+		},
+
+		{
+			"fieldName" : "source",
+			"xpathSelector" : "//span[@id='source_baidu']/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data};  return data.substring(3,data.length)}"
+		},
+
+		{
+
+			"fieldName" : "date",
+			"xpathSelector" : "//span[@id='pubtime_baidu']/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data};return data.replace(/年/g,'-').replace(/月/g,'-').replace(/日/g,'');}",
+			"converter" : "dateConverter",
+			"converterParam" : "yyyy-MM-dd HH:mm:ss"
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : ".arl-c-txt",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"cssSelector" : ".arl-c-txt img",
+			"cssSelectorAttrName" : "src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

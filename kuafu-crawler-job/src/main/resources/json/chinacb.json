@@ -1,0 +1,103 @@
+{
+	"comment" : "中国经营网",
+	"domainTag" : "chinacb",
+	"crawlerBaseInfo" : 
+	{
+		"baseUrl" : "http://www.cb.com.cn",
+		"threadCount" : 3
+	},
+
+	"crawlerTrigger" : 
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.chinacb"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 4 * * ?"
+		}
+	],
+
+	"site" : 
+	{
+		"charset" : "UTF-8",
+		"timeOut" : 30000,
+		"userAgent" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36",
+		"acceptStatCode" : 
+		[
+			200,
+			301
+		],
+
+		"cycleRetryTimes" : 3
+	},
+
+	"urlBuilder" : 
+	{
+		"baseUrlFilter" : "(http://www\\.cb\\.com\\.cn/((economy)|(finance)|(companies)|(opinion))(/?)((\\d+\\.html)|(\\d{4}\\_\\d{4}/\\d+.html))?)",
+		"urlFilterPlugins" : 
+		{
+			"(http://www\\.cb\\.com\\.cn/((economy)|(finance)|(companies)|(opinion))(/?)(\\d+\\.html)?)" : "(http://www\\.cb\\.com\\.cn/((economy)|(finance)|(companies)|(opinion))(/)((\\d+\\.html)|(\\d{4}\\_\\d{4}/\\d+.html)))"
+		}
+	},
+
+	"fieldBuilder" : 
+	[
+		{
+			"fieldName" : "keyword",
+			"xpath2Selector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,|"
+		},
+
+		{
+			"fieldName" : "title",
+			"xpath2Selector" : "//div[@class='article-wrap']/h1/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "source",
+			"xpath2Selector" : "//div[@class='article-author']/span[@class='author-name']/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data};return data.substring(3,data.length)}"
+		},
+
+		{
+			"fieldName" : "date",
+			"xpath2Selector" : "//div[@class='article-author']//span[@class='article-time']/text()",
+			"isList" : false,
+			"converter" : "dateConverter",
+			"converterParam" : "yyyy-MM-dd HH:mm:ss"
+		},
+
+		{
+			"fieldName" : "summary",
+			"xpath2Selector" : "//div[@id='article_content']//p[position()<3]//text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : "#article_content",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"cssSelector" : "#article-content img",
+			"cssSelectorAttrName" : "src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

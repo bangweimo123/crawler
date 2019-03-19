@@ -1,0 +1,105 @@
+{
+	"comment" : "凤凰网-科技频道",
+	"domainTag" : "ifeng-tech",
+	"crawlerBaseInfo" : 
+	{
+		"baseUrl" : "http://tech.ifeng.com/",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" : 
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.ifeng-tech"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 13 * * ?"
+		}
+	],
+
+	"site" : 
+	{
+		"charset" : "UTF-8",
+		"timeOut" : 30000,
+		"acceptStatCode" : 
+		[
+			200,
+			302
+		]
+	},
+
+	"urlBuilder" : 
+	{
+		"baseUrlFilter" : "((http://tech\\.ifeng\\.com/listpage/\\d+/\\d+/list.shtml)|(http://tech\\.ifeng\\.com/a/\\d{8}/\\d+_\\d+.shtml)|(http://tech\\.ifeng\\.com/\\w+/)|(http://digi\\.ifeng\\.com/)|(http://digi\\.ifeng\\.com/\\w+/))",
+		"urlFilterPlugins" : 
+		{
+			"(http://tech\\.ifeng\\.com/\\w+/)|(http://digi\\.ifeng\\.com/)|(http://digi\\.ifeng\\.com/\\w+/)|(http://tech\\.ifeng\\.com/listpage/\\d+/\\d+/list.shtml)" : "((http://tech\\.ifeng\\.com/listpage/\\d+/\\d+/list.shtml)|(http://tech\\.ifeng\\.com/a/\\d{8}/\\d+_\\d+.shtml))"
+		}
+	},
+
+	"fieldBuilder" : 
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,|"
+		},
+
+		{
+			"fieldName" : "title",
+			"xpath2Selector" : "//div[@id='artical']/h1[@id='artical_topic']/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "author",
+			"xpath2Selector" : "//div[@id='artical']/div[@id='artical_sth']/p[@class='p_time']/span[@itemprop='author']/span[@itemprop='name']//text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "source",
+			"xpath2Selector" : "//div[@id='artical']/div[@id='artical_sth']/p[@class='p_time']/span[@itemprop='publisher']/span[@itemprop='name']//text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "date",
+			"xpath2Selector" : "//div[@id='artical']/div[@id='artical_sth']/p[@class='p_time']//span[@itemprop='datePublished']/text()",
+			"isList" : false,
+			"converter" : "dateConverter",
+			"converterParam" : "yyyy年MM月dd日 HH:mm"
+		},
+
+		{
+			"fieldName" : "summary",
+			"xpath2Selector" : "//div[@id='artical']/div[@id='artical_real']/div[@id='main_content']//p[position()<5]/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : "#main_content",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"cssSelector" : "#main_content img",
+			"cssSelectorAttrName" : "src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

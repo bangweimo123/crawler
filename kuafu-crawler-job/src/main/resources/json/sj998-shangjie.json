@@ -1,0 +1,96 @@
+{
+	"comment" : "商界招商网-商界",
+	"domainTag" : "sj998-shangjie",
+	"crawlerBaseInfo" : 
+	{
+		"baseUrl" : "http://media.sj998.com/shangjie/",
+		"threadCount" : 20,
+		"limitMonth" : 4
+	},
+
+	"crawlerTrigger" : 
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.sj998-shangjie"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 8 * * ?"
+		}
+	],
+
+	"site" : 
+	{
+		"charset" : "UTF-8",
+		"timeOut" : 30000
+	},
+
+	"urlBuilder" : 
+	{
+		"baseUrlFilter" : "((http://media\\.sj998\\.com/shangjie/list-\\d+.shtml)|(http://media\\.sj998\\.com/shangjie/\\d+.shtml))",
+		"urlFilterPlugins" : 
+		{
+			"(http://media\\.sj998\\.com/shangjie/)" : "((http://media\\.sj998\\.com/shangjie/list-\\d+.shtml)|(http://media\\.sj998\\.com/shangjie/\\d+.shtml))",
+			"(http://media\\.sj998\\.com/shangjie/list-\\d+.shtml)" : "((http://media\\.sj998\\.com/shangjie/list-\\d+.shtml)|(http://media\\.sj998\\.com/shangjie/\\d+.shtml))"
+		}
+	},
+
+	"fieldBuilder" : 
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,|"
+		},
+
+		{
+			"fieldName" : "title",
+			"xpathSelector" : "//div[@class='article-detail']//h1[@class='title']/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "source",
+			"xpathSelector" : "//div[@class='article-detail']//p[@class='info']/a/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "date",
+			"xpathSelector" : "//div[@class='article-detail']//p[@class='info']/span[@class='pub-date']/text()",
+			"isList" : false,
+			"converter" : "dateConverter",
+			"converterParam" : "yyyy-MM-dd HH:mm:ss"
+		},
+
+		{
+			"fieldName" : "summary",
+			"xpathSelector" : "//div[@class='article-detail']//p[@class='guide']/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : ".article-content",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"cssSelector" : ".article-content img",
+			"cssSelectorAttrName" : "src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}
