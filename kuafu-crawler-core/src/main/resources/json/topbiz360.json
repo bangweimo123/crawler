@@ -1,0 +1,100 @@
+{
+	"comment" : "第一商业网",
+	"domainTag" : "topbiz360",
+	"crawlerBaseInfo" : 
+	{
+		"baseUrl" : "http://www.topbiz360.com/web/html/newscenter/Catering/",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" : 
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.topbiz360"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 5 * * ?"
+		}
+	],
+
+	"site" : 
+	{
+		"charset" : "GBK",
+		"timeOut" : 30000
+	},
+
+	"urlBuilder" : 
+	{
+		"baseUrlFilter" : "((http://www\\.topbiz360\\.com/web/html/newscenter/Catering/list_\\d+_\\d+.html)|(http://www.topbiz360.com/web/html/newscenter/Catering/\\d+.html))",
+		"urlFilterPlugins" : 
+		{
+			"(http://www\\.topbiz360\\.com/web/html/newscenter/Catering/list_\\d+_\\d+.html)" : "((http://www\\.topbiz360\\.com/web/html/newscenter/Catering/list_\\d+_\\d+.html)|(http://www.topbiz360.com/web/html/newscenter/Catering/\\d+.html))"
+		}
+	},
+
+	"fieldBuilder" : 
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,|"
+		},
+
+		{
+			"fieldName" : "title",
+			"xpath2Selector" : "//div[@class='viewbox']/div[@class='title']/h2/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "author",
+			"xpath2Selector" : "//div[@class='viewbox']/div[@class='info']/small[3]/following-sibling::text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "source",
+			"xpath2Selector" : "//div[@class='viewbox']/div[@class='info']/small[2]/following-sibling::text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "date",
+			"xpath2Selector" : "//div[@class='viewbox']/div[@class='info']/small[1]/following-sibling::text()",
+			"isList" : false,
+			"converter" : "dateConverter",
+			"converterParam" : "yyyy-MM-dd"
+		},
+
+		{
+			"fieldName" : "summary",
+			"xpath2Selector" : "//div[@class='content1']/table/tbody/tr/td/p[position()<3]//text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : ".content1 table tr td",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"cssSelector" : ".content1 table tr td img",
+			"cssSelectorAttrName" : "src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

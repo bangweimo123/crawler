@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="kuafu-crawler-job:war">
+    <output-path>$PROJECT_DIR$/kuafu-crawler-job/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>kuafu-crawler-job</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="kuafu-crawler-job-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="kuafu-crawler-job:war exploded" />
+    </root>
+  </artifact>
+</component>

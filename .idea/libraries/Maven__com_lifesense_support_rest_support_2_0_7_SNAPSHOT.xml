@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.lifesense.support:rest-support:2.0.7-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/lifesense/support/rest-support/2.0.7-SNAPSHOT/rest-support-2.0.7-20181023.023212-16.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/lifesense/support/rest-support/2.0.7-SNAPSHOT/rest-support-2.0.7-20181023.023212-16-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/lifesense/support/rest-support/2.0.7-SNAPSHOT/rest-support-2.0.7-20181023.023212-16-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,11 +1,10 @@
 package com.dianping.merchant.robot.crawler.biz.filter.customer;
 
+import com.lifesense.kuafu.crawler.core.constants.CrawlerCommonConstants;
+import com.lifesense.kuafu.crawler.core.processor.annotation.CrawlerFilterTag;
+import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerFilter;
+import com.lifesense.kuafu.crawler.core.processor.plugins.entity.ProStatus;
 import us.codecraft.webmagic.Page;
-
-import com.dianping.merchant.robot.crawler.common.constants.CrawlerCommonConstants;
-import com.dianping.merchant.robot.crawler.common.processor.annotation.CrawlerFilterTag;
-import com.dianping.merchant.robot.crawler.common.processor.iface.ICrawlerFilter;
-import com.dianping.merchant.robot.crawler.common.processor.plugins.entity.ProStatus;
 
 @CrawlerFilterTag(target = {"hupogu"}, priority = 1, type = CrawlerCommonConstants.FilterConstant.PRE_FILTER_TYPE)
 public class AbstractUrlConverterCrawlerFilter implements ICrawlerFilter {

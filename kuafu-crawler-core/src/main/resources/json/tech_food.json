@@ -1,0 +1,98 @@
+{
+	"comment" : "中国食品科技网-新闻频道",
+	"domainTag" : "tech_food",
+	"crawlerBaseInfo" :
+	{
+		"baseUrl" : "http://www.tech-food.com/news",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" :
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.tech.food"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 1,7,13,19 * * ?"
+		}
+	],
+
+	"site" :
+	{
+		"charset" : "UTF-8",
+		"timeOut" : 30000
+	},
+
+
+	"urlBuilder" :
+	{
+
+		"baseUrlFilter" : "((http://www\\.tech-food\\.com/news/detail/n\\d+\\.htm)|(http://www\\.tech-food\\.com/news/c\\d+/list_\\d+\\.html)|(http://www\\.tech-food\\.com/news/c\\d+/)|(http://www\\.tech-food\\.com/news))",
+
+		"urlFilterPlugins" :
+		{
+          "(http://www\\.tech-food\\.com/news)" : "((http://www\\.tech-food\\.com/news/detail/n\\d+\\.htm)|(http://www\\.tech-food\\.com/news/c\\d+/))",
+          "(http://www\\.tech-food\\.com/news/c\\d+/)" : "((http://www\\.tech-food\\.com/news/detail/n\\d+\\.htm)|(http://www\\.tech-food\\.com/news/c\\d+/list_\\d+\\.html))",
+		  "(http://www\\.tech-food\\.com/news/c\\d+/list_\\d+\\.html)" : "((http://www\\.tech-food\\.com/news/detail/n\\d+\\.htm)|(http://www\\.tech-food\\.com/news/c\\d+/list_\\d+\\.html))"
+		},
+
+		"baseCount" : 8000
+	},
+
+
+	"fieldBuilder" :
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,| "
+		},
+
+		{
+			"fieldName" : "title",
+			"xpathSelector" : "//div[@class='biaoti1']/h1/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "source",
+			"xpathSelector" : "//div[@class='biaoti1x']/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data}; index = data.lastIndexOf(' '); return data.substring(index+1,data.length)}"
+		},
+
+		{
+
+			"fieldName" : "date",
+			"xpathSelector" : "//div[@class='biaoti1x']/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data};  index = data.lastIndexOf(' '); return data.substring(0,index)}",
+			"converter" : "dateConverter"
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : "#zoom",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"cssSelector" : "#zoom img",
+			"cssSelectorAttrName" : "src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

@@ -1,0 +1,106 @@
+{
+	"comment" : "大洋网-电商频道",
+	"domainTag" : "dayoo_ds",
+	"crawlerBaseInfo" :
+	{
+		"baseUrl" : "http://news.dayoo.com/ds/index.shtml",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" :
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.dayoo.ds"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 1 * * ?"
+		}
+	],
+
+	"site" :
+	{
+		"charset" : "UTF-8",
+		"timeOut" : 30000
+	},
+
+
+	"urlBuilder" :
+	{
+
+	  "baseUrlFilter" : "((http://news\\.dayoo\\.com/ds/\\d+/\\d+/\\d+\\_\\d+.htm)|(http://news\\.dayoo\\.com/ds/\\d+\\.shtml)|(http://news\\.dayoo\\.com/ds/index\\.shtml))",
+
+	  "urlFilterPlugins" :
+	  {
+		"(http://news\\.dayoo\\.com/ds/index\\.shtml)" : "((http://news\\.dayoo\\.com/ds/\\d+/\\d+/\\d+\\_\\d+.htm)|(http://news\\.dayoo\\.com/ds/\\d+\\.shtml))",
+		"(http://news\\.dayoo\\.com/ds/\\d+\\.shtml)" : "(http://news\\.dayoo\\.com/ds/\\d+/\\d+/\\d+\\_\\d+.htm)"
+	  },
+
+	  "baseCount" : 8000
+	},
+
+
+	"fieldBuilder" :
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,| "
+		},
+
+		{
+			"fieldName" : "title",
+			"xpathSelector" : "//div[@class='article-hd']/h1/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "source",
+			"xpathSelector" : "//span[@class='source']/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data}; index = data.indexOf(':'); return data.substring(index+1,data.length)}",
+			"converter" : "stringTrimConverter"
+		},
+
+		{
+
+			"fieldName" : "date",
+			"xpathSelector" : "//span[@class='time']/text()",
+			"isList" : false,
+			"converter" : "dateConverter"
+		},
+
+		{
+		  "fieldName" : "author",
+		  "xpathSelector" : "//div[@class='editor']/text()",
+		  "isList" : false,
+		  "script" : "function dataConverter(data){ if(null==data){return data}; index = data.indexOf('：'); return data.substring(index+1,data.length-1)}",
+		  "converter" : "stringTrimConverter"
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : "#text_content",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+		  "fieldName" : "thumbnail",
+		  "cssSelector" : "#text_content img",
+		  "cssSelectorAttrName" : "src",
+		  "isList" : false,
+		  "converter" : "imgConverter"
+		}
+
+	]
+}

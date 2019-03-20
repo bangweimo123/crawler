@@ -1,25 +1,23 @@
 package com.dianping.merchant.robot.crawler.biz.filter.customer;
 
+import com.lifesense.kuafu.crawler.core.constants.CrawlerCommonConstants;
+import com.lifesense.kuafu.crawler.core.processor.annotation.CrawlerFilterTag;
+import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerFilter;
+import com.lifesense.kuafu.crawler.core.processor.plugins.entity.ProMessageCode;
+import com.lifesense.kuafu.crawler.core.processor.plugins.entity.ProStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.utils.HttpConstant;
 
-import com.dianping.avatar.log.AvatarLogger;
-import com.dianping.avatar.log.AvatarLoggerFactory;
-import com.dianping.merchant.robot.crawler.common.constants.CrawlerCommonConstants;
-import com.dianping.merchant.robot.crawler.common.processor.annotation.CrawlerFilterTag;
-import com.dianping.merchant.robot.crawler.common.processor.iface.ICrawlerFilter;
-import com.dianping.merchant.robot.crawler.common.processor.plugins.entity.ProMessageCode;
-import com.dianping.merchant.robot.crawler.common.processor.plugins.entity.ProStatus;
-
 /**
  * 重定向的过滤
- * 
+ *
  * @author mobangwei
- * 
  */
 @CrawlerFilterTag(target = {"iyiou", "zhcyw"}, priority = 12, type = CrawlerCommonConstants.FilterConstant.AFTER_FILTER_TYPE)
 public class RedirectCheckCrawlerFilter implements ICrawlerFilter {
-    private static final AvatarLogger LOGGER = AvatarLoggerFactory.getLogger(RedirectCheckCrawlerFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RedirectCheckCrawlerFilter.class);
 
     @Override
     public ProStatus doFilter(Page page) {

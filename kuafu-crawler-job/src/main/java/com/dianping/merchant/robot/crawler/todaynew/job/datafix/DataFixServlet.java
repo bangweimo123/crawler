@@ -1,27 +1,23 @@
 package com.dianping.merchant.robot.crawler.todaynew.job.datafix;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import com.google.common.collect.Maps;
+import com.lifesense.kuafu.crawler.core.processor.spring.SpringLocator;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.dianping.avatar.util.UrlUtils;
-import com.dianping.combiz.spring.context.SpringLocator;
-import com.dianping.squirrel.common.exception.StoreException;
-import com.google.common.collect.Maps;
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class DataFixServlet extends HttpServlet {
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 2474400446016950129L;
 
@@ -53,7 +49,6 @@ public class DataFixServlet extends HttpServlet {
             return;
         }
         String uri = pathInfo.substring(1);
-        UrlUtils.getParameterString(request);
         String[] ops = uri.split("/");
         if (ops.length == 2) {
             if (OP_TYPE_ACTION.equals(ops[0])) {
@@ -68,7 +63,7 @@ public class DataFixServlet extends HttpServlet {
         }
     }
 
-    private void doAction(Option operation, HttpServletRequest request, HttpServletResponse response) throws IOException, StoreException {
+    private void doAction(Option operation, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, String[]> params = request.getParameterMap();
         Map<String, Object> toFixParams = Maps.newHashMap();
         for (String key : params.keySet()) {
@@ -85,7 +80,7 @@ public class DataFixServlet extends HttpServlet {
 
     /**
      * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest request,
-     *      javax.servlet.http.HttpServletResponse response)
+     * javax.servlet.http.HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.doGet(request, response);

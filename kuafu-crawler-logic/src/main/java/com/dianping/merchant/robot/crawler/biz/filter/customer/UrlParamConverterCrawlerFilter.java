@@ -1,13 +1,12 @@
 package com.dianping.merchant.robot.crawler.biz.filter.customer;
 
+import com.lifesense.kuafu.crawler.encode.html.HtmlParserUtils;
+import com.lifesense.kuafu.crawler.encode.tag.parser.TagParserEnum;
+import com.lifesense.kuafu.crawler.core.constants.CrawlerCommonConstants;
+import com.lifesense.kuafu.crawler.core.processor.annotation.CrawlerFilterTag;
+import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerFilter;
+import com.lifesense.kuafu.crawler.core.processor.plugins.entity.ProStatus;
 import us.codecraft.webmagic.Page;
-
-import com.dianping.merchant.robot.crawler.common.constants.CrawlerCommonConstants;
-import com.dianping.merchant.robot.crawler.common.processor.annotation.CrawlerFilterTag;
-import com.dianping.merchant.robot.crawler.common.processor.iface.ICrawlerFilter;
-import com.dianping.merchant.robot.crawler.common.processor.plugins.entity.ProStatus;
-import com.dianping.merchant.robot.crawler.encode.html.HtmlParserUtils;
-import com.dianping.merchant.robot.crawler.encode.tag.parser.TagParserEnum;
 
 @CrawlerFilterTag(target = {"ifeng-tech"}, priority = 1, type = CrawlerCommonConstants.FilterConstant.PRE_FILTER_TYPE)
 public class UrlParamConverterCrawlerFilter implements ICrawlerFilter {

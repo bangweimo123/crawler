@@ -1,0 +1,99 @@
+{
+	"comment" : "创业邦",
+	"domainTag" : "cyzone",
+	"crawlerBaseInfo" : 
+	{
+		"baseUrl" : "http://www.cyzone.cn/",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" : 
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.cyzone"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 5 * * ?"
+		}
+	],
+
+	"site" : 
+	{
+		"charset" : "UTF-8",
+		"timeOut" : 30000
+	},
+
+	"urlBuilder" : 
+	{
+		"urlFilterPlugins" : 
+		{
+			"http://www\\.cyzone\\.cn/" : "((http://www\\.cyzone\\.cn/a/\\d{8}/\\d+.html)|(http://www\\.cyzone\\.cn/\\w+/)|(http://www\\.cyzone\\.cn/category/\\d+/)|(http://www\\.cyzone\\.cn/\\w+/index_\\d+.html))",
+			"((http://www\\.cyzone\\.cn/\\w+/)|(http://www\\.cyzone\\.cn/category/\\d+/)|(http://www\\.cyzone\\.cn/\\w+/index_\\d+.html))" : "((http://www\\.cyzone\\.cn/\\w+/index_\\d+.html)|(http://www\\.cyzone\\.cn/a/\\d{8}/\\d+.html))"
+		},
+
+		"baseCount" : 8000
+	},
+
+	"fieldBuilder" : 
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,|"
+		},
+
+		{
+			"fieldName" : "title",
+			"xpathSelector" : "//div[@class='article-hd']/h1[@class='article-tit']/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "author",
+			"xpath2Selector" : "//div[contains(@class,'author-time')]/span[@class='name']/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "source",
+			"defaultValue" : "创业邦"
+		},
+
+		{
+			"fieldName" : "date",
+			"xpath2Selector" : "//div[contains(@class,'author-time')]/span[contains(@class,'date-time')]/@data-time",
+			"isList" : false,
+			"converter" : "dateTimeConverter"
+		},
+
+		{
+			"fieldName" : "summary",
+			"xpath2Selector" : "//div[@class='article-content']/p[position()<3]/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : ".article-content",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"xpath2Selector" : "//div[@class='article-content']//img[1]/@src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

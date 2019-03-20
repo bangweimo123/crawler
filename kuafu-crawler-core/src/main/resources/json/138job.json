@@ -1,0 +1,103 @@
+{
+	"comment" : "美业网",
+	"domainTag" : "138job",
+	"crawlerBaseInfo" : 
+	{
+		"baseUrl" : "http://news.138job.com",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" : 
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.138job"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 2 * * ?"
+		}
+	],
+
+	"site" : 
+	{
+		"charset" : "UTF-8",
+		"timeOut" : 30000
+	},
+
+	"urlBuilder" : 
+	{
+		"baseUrlFilter" : "((http://news\\.138job\\.com/info/list-\\d+)|(http://news\\.138job\\.com/info(/\\d+){2}\\.shtml))",
+		"urlFilterPlugins" : 
+		{
+			"(http://news\\.138job\\.com)" : "((http://news\\.138job\\.com/info/list-\\d+)|(http://news\\.138job\\.com/info(/\\d+){2}\\.shtml))",
+			"(http://news\\.138job\\.com/info/list-\\d+)" : "(http://news\\.138job\\.com/info(/\\d+){2}\\.shtml)"
+		}
+	},
+
+	"fieldBuilder" : 
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,|"
+		},
+
+		{
+			"fieldName" : "title",
+			"xpathSelector" : "//div[@class='article-title']/h2/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "author",
+			"xpathSelector" : "//div[@class='article-title']/h5/em[3]/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data};return data.substring(3,data.length)}"
+		},
+
+		{
+			"fieldName" : "source",
+			"xpathSelector" : "//div[@class='article-title']/h5/em[2]/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data};return data.substring(3,data.length)}"
+		},
+
+		{
+			"fieldName" : "date",
+			"xpathSelector" : "//div[@class='article-title']/h5/em[1]/text()",
+			"isList" : false,
+			"converter" : "dateConverter",
+			"converterParam" : "yyyy.MM.dd"
+		},
+
+		{
+			"fieldName" : "summary",
+			"xpathSelector" : "//div[@class='article-descipt']/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : ".article-content",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"cssSelector" : ".article-content img",
+			"cssSelectorAttrName" : "src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

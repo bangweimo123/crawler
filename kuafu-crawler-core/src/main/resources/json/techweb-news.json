@@ -1,0 +1,125 @@
+{
+	"comment" : "tech-web新闻频道",
+	"domainTag" : "techweb-news",
+	"crawlerBaseInfo" : 
+	{
+		"baseUrl" : "http://www.techweb.com.cn/news/",
+		"threadCount" : 20,
+		"limitMonth" : 1
+	},
+
+	"crawlerTrigger" : 
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.techweb-news"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 12 * * ?"
+		}
+	],
+
+	"site" : 
+	{
+		"charset" : "UTF-8",
+		"timeOut" : 30000
+	},
+
+	"urlBuilder" : 
+	{
+		"baseUrlFilter" : "((http://www\\.techweb\\.com\\.cn/news/list\\_\\d+.shtml#wp)|(http://www\\.techweb\\.com\\.cn/\\w+/\\d{4}-\\d{2}-\\d{2}/\\d+.shtml)|(http://www\\.techweb\\.com\\.cn/\\w+/\\d{4}-\\d{2}-\\d{2}/\\d+_(\\d+).shtml))",
+		"urlFilterPlugins" : 
+		{
+			"(http://www\\.techweb\\.com\\.cn/news/list\\_\\d+.shtml#wp)" : "((http://www\\.techweb\\.com\\.cn/news/list\\_\\d+.shtml#wp)|(http://www\\.techweb\\.com\\.cn/\\w+/\\d{4}-\\d{2}-\\d{2}/\\d+.shtml))"
+		},
+
+		"pageUrlFilterPlugins" : 
+		{
+			"(http://www\\.techweb\\.com\\.cn/\\w+/\\d{4}-\\d{2}-\\d{2}/\\d+.shtml)" : "(http://www\\.techweb\\.com\\.cn/\\w+/\\d{4}-\\d{2}-\\d{2}/\\d+_(\\d+).shtml)"
+		},
+
+		"baseCount" : 10000
+	},
+
+	"fieldBuilder" : 
+	[
+		{
+			"fieldName" : "keyword",
+			"xpath2Selector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,|"
+		},
+
+		{
+			"fieldName" : "title",
+			"xpath2Selector" : "//div[@class='article']/div[@class='title']/h1/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "author",
+			"xpath2Selector" : "//div[@class='article']/div[@class='titleBar']/span[@id='author_baidu']/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data};return data.substring(3,data.length)}"
+		},
+
+		{
+			"fieldName" : "source",
+			"xpath2Selector" : "//div[@class='article']/div[@class='titleBar']/span[@id='source_baidu']/a/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "date",
+			"xpath2Selector" : "//div[@class='main']/div[@class='left2']/div[@class='article']/div[@class='titleBar']/span[@id='pubtime_baidu']/text()",
+			"isList" : false,
+			"converter" : "dateConverter",
+			"converterParam" : "yyyy.MM.dd HH:mm:ss"
+		},
+
+		{
+			"fieldName" : "summary",
+			"xpath2Selector" : "//div[@id='artibody']/p[position()<3]//text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : "#artibody",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false,
+			"converter" : "htmlTagFilterConverter",
+			"converterParam" : 
+			{
+				"excludeTag" : 
+				[
+					"style",
+					"script"
+				],
+
+				"excludeXpath" : 
+				[
+					"//div[@class='page']",
+					"//div[@align='center']",
+					"//div[@class='tag-editor']"
+				]
+			}
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"cssSelector" : "#artibody img",
+			"cssSelectorAttrName" : "src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

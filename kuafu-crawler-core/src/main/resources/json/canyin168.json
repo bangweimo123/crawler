@@ -1,0 +1,134 @@
+{
+	"comment" : "职业餐饮网",
+	"domainTag" : "canyin168",
+	"crawlerBaseInfo" : 
+	{
+		"baseUrl" : "http://www.canyin168.com/Index.html",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" : 
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.canyin168"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 3 * * ?"
+		}
+	],
+
+	"site" : 
+	{
+		"charset" : "UTF-8",
+		"timeOut" : 30000
+	},
+
+	"urlBuilder" : 
+	{
+		"baseUrlFilter" : "((http://www\\.canyin168\\.com/Article/\\w+/\\d+.html)|(http://www\\.canyin168\\.com/cook/\\w+/\\w+/\\d+/\\d+.html)|(http://www\\.canyin168\\.com/glyy/\\w+/\\w+/\\d+\\.html))",
+		"urlFilterPlugins" : 
+		{
+			"(http://www\\.canyin168\\.com/Index\\.html)" : "(http://www\\.canyin168\\.com/((Article)|(cook)|(glyy))/)",
+			"(http://www\\.canyin168\\.com/Article/)" : "(http://www\\.canyin168\\.com/Article/\\w+/\\d+.html)",
+			"(http://www\\.canyin168\\.com/cook/)" : "(http://www\\.canyin168\\.com/cook/\\w+/\\w+/\\d+/\\d+.html)",
+			"(http://www\\.canyin168\\.com/glyy/)" : "(http://www\\.canyin168\\.com/glyy/\\w+/\\w+/\\d+\\.html)"
+		}
+	},
+
+	"fieldBuilder" : 
+	[
+		{
+			"fieldName" : "title",
+			"xpathSelector" : "//div[@class='a_con']/div[@class='con_title']/span//font/text()|//div[@class='a_con']/div[@class='con_title']/span//h1/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "author",
+			"xpath2Selector" : "//div[@class='a_con']/div[@class='font_left']/span[1]/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){if(null==data){return data};return data.substring(3,data.length)}",
+			"spForUrlRegex" : "(http://www\\.canyin168\\.com/Article/\\w+/\\d+.html)"
+		},
+
+		{
+			"fieldName" : "source",
+			"xpath2Selector" : "//div[@class='a_con']/div[@class='font_left']/span[2]/a/text()",
+			"isList" : false,
+			"spForUrlRegex" : "(http://www\\.canyin168\\.com/Article/\\w+/\\d+.html)"
+		},
+
+		{
+			"fieldName" : "source",
+			"xpath2Selector" : "//div[@class='a_con']/div[@class='font_left']/span[1]/a/text()",
+			"isList" : false,
+			"spForUrlRegex" : "(http://www\\.canyin168\\.com/glyy/\\w+/\\w+/\\d+\\.html)",
+			"defaultValue" : "餐饮职业网"
+		},
+
+		{
+			"fieldName" : "author",
+			"xpath2Selector" : "//div[@class='a_con']/div[@class='font_left']/span[1]/text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data};return data.substring(3,data.length)}",
+			"spForUrlRegex" : "(http://www\\.canyin168\\.com/cook/\\w+/\\w+/\\d+/\\d+.html)"
+		},
+
+		{
+			"fieldName" : "source",
+			"xpath2Selector" : "//div[@class='a_con']/div[@class='font_left']/span[2]/a/text()",
+			"isList" : false,
+			"spForUrlRegex" : "(http://www\\.canyin168\\.com/cook/\\w+/\\w+/\\d+/\\d+.html)",
+			"defaultValue" : "餐饮职业网"
+		},
+
+		{
+			"fieldName" : "date",
+			"xpath2Selector" : "//div[@class='a_con']/div[@class='font_left']/span[3]//text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data};return data.substring(5,data.length)}",
+			"converter" : "dateConverter",
+			"converterParam" : "yyyy年MM月dd日"
+		},
+
+		{
+			"fieldName" : "date",
+			"xpath2Selector" : "//div[@class='a_con']/div[@class='font_left']/span[2]//text()",
+			"isList" : false,
+			"script" : "function dataConverter(data){ if(null==data){return data};return data.substring(5,data.length)}",
+			"converter" : "dateConverter",
+			"converterParam" : "yyyy年MM月dd日",
+			"spForUrlRegex" : "(http://www\\.canyin168\\.com/glyy/\\w+/\\w+/\\d+\\.html)"
+		},
+
+		{
+			"fieldName" : "summary",
+			"xpath2Selector" : "//div[@class='c_content_overflow']//p[1]//text()",
+			"isList" : true,
+			"script" : "function dataConverter(data){ if(null==data){return data}; var returnStr='';for(var i=0;i<data.size();i++){var str=data.get(i);returnStr=returnStr+str;} return returnStr;}",
+			"converter" : "stringTrimConverter"
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : ".c_content_overflow",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"xpath2Selector" : "//div[@class='c_content_overflow']//img/@src|//div[@class='c_content_overflow']//input[@type='image']/@src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

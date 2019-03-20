@@ -1,0 +1,117 @@
+{
+	"comment" : "亿欧网",
+	"domainTag" : "iyiou",
+	"crawlerBaseInfo" : 
+	{
+		"baseUrl" : "http://www.iyiou.com/i/canyin",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" : 
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.iyiou"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 7 * * ?"
+		}
+	],
+
+	"site" : 
+	{
+		"charset" : "UTF-8",
+		"acceptStatCode" : 
+		[
+			200,
+			302
+		],
+
+		"timeOut" : 30000
+	},
+
+	"urlBuilder" : 
+	{
+		"method" : "POST",
+		"baseUrlFilter" : "((http://www\\.iyiou\\.com/p/\\w+)|(http://www\\.iyiou\\.com/i/canyin/page/\\w+\\.html))",
+		"urlFilterPlugins" : 
+		{
+			"(http://www\\.iyiou\\.com/i/canyin)" : "((http://www\\.iyiou\\.com/p/\\w+)|(http://www\\.iyiou\\.com/i/canyin/page/\\w+\\.html))",
+			"(http://www\\.iyiou\\.com/i/canyin/page/\\w+\\.html)" : "((http://www\\.iyiou\\.com/p/\\w+)|(http://www\\.iyiou\\.com/i/canyin/page/\\w+\\.html))"
+		}
+	},
+
+	"fieldBuilder" : 
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,| "
+		},
+
+		{
+			"fieldName" : "title",
+			"cssSelector" : "#post_content #post_title",
+			"cssSelectorAttrName" : "text",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "tag",
+			"cssSelector" : "#post_info #post_industry a",
+			"cssSelectorAttrName" : "text",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "author",
+			"xpathSelector" : "//div[@id='post_author']/a/text()|//div[@id='post_author']/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "source",
+			"cssSelector" : "#post_info #post_source",
+			"cssSelectorAttrName" : "text",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "date",
+			"cssSelector" : "#post_info #post_date + div.hidden",
+			"cssSelectorAttrName" : "text",
+			"isList" : false,
+			"converter" : "dateConverter"
+		},
+
+		{
+			"fieldName" : "summary",
+			"xpathSelector" : "//div[@id='post_brief']/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : "#post_description",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"cssSelector" : "#post_thumbnail img",
+			"cssSelectorAttrName" : "src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

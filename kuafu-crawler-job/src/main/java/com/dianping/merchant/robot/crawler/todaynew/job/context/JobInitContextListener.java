@@ -1,20 +1,17 @@
 package com.dianping.merchant.robot.crawler.todaynew.job.context;
 
-import java.util.List;
-
-import javax.servlet.ServletContextEvent;
-
+import com.lifesense.kuafu.crawler.core.processor.spider.SpiderFactory;
+import com.lifesense.kuafu.crawler.core.processor.utils.DomainTagUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.web.context.ContextLoaderListener;
 
-import com.dianping.merchant.robot.crawler.common.processor.spider.SpiderFactory;
-import com.dianping.merchant.robot.crawler.common.processor.utils.DomainTagUtils;
+import javax.servlet.ServletContextEvent;
+import java.util.List;
 
 /**
  * job启动初始化
- * 
+ *
  * @author mobangwei
- * 
  */
 public class JobInitContextListener extends ContextLoaderListener {
 
@@ -34,7 +31,7 @@ public class JobInitContextListener extends ContextLoaderListener {
         List<String> allDomainTags = DomainTagUtils.getAllDomainTags();
         if (CollectionUtils.isNotEmpty(allDomainTags)) {
             for (String domainTag : allDomainTags) {
-                SpiderFactory.destorySpider(domainTag);
+                SpiderFactory.destroySpider(domainTag);
             }
         }
         super.contextDestroyed(event);

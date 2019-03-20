@@ -1,0 +1,96 @@
+{
+	"comment" : "新华网",
+	"domainTag" : "xinhuanet",
+	"crawlerBaseInfo" : 
+	{
+		"baseUrl" : "http://www.news.cn/tech/index.htm",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" : 
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.xinhuanet"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 9 * * ?"
+		}
+	],
+
+	"site" : 
+	{
+		"charset" : "UTF-8",
+		"timeOut" : 30000
+	},
+
+	"urlBuilder" : 
+	{
+		"baseUrlFilter" : "((http://news\\.xinhuanet\\.com/tech/\\d{4}-\\d{2}/\\d+/c\\_\\d+\\.htm)|(http://www\\.news\\.cn/tech/\\w+\\.htm))",
+		"urlFilterPlugins" : 
+		{
+			"(http://www\\.news\\.cn/tech/\\w+\\.htm)" : "(http://news\\.xinhuanet\\.com/tech/\\d{4}-\\d{2}/\\d+/c\\_\\d+\\.htm)"
+		},
+
+		"baseCount" : 8000
+	},
+
+	"fieldBuilder" : 
+	[
+		{
+			"fieldName" : "keyword",
+			"xpathSelector" : "//meta[@name='keywords']/@content",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,| "
+		},
+
+		{
+			"fieldName" : "title",
+			"xpathSelector" : "//div[@id='article']/h1[@id='title']/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "source",
+			"xpathSelector" : "//div[@id='article']///div[@class='source']/span[2]/em[@id='source']/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "date",
+			"xpathSelector" : "//div[@id='article']///div[@class='source']/span[1]/text()",
+			"isList" : false,
+			"converter" : "dateConverter",
+			"converterParam" : "yyyy年MM月dd日 HH:mm:ss"
+		},
+
+		{
+			"fieldName" : "summary",
+			"xpath2Selector" : "//div[@class='article']/p[position()<5]/text()|//div[@class='article']/p[position()<5]/*/text()",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "content",
+			"cssSelector" : "div .article",
+			"cssSelectorAttrName" : "innerhtml",
+			"isList" : false
+		},
+
+		{
+			"fieldName" : "thumbnail",
+			"cssSelector" : "div .article img",
+			"cssSelectorAttrName" : "src",
+			"isList" : false,
+			"converter" : "imgConverter"
+		}
+	]
+}

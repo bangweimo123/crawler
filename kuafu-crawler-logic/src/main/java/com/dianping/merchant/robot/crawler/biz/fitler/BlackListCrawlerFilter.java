@@ -1,21 +1,19 @@
 package com.dianping.merchant.robot.crawler.biz.fitler;
 
+import com.google.common.collect.Lists;
+import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerFilter;
+import com.lifesense.kuafu.crawler.core.processor.plugins.entity.ProMessageCode;
+import com.lifesense.kuafu.crawler.core.processor.plugins.entity.ProStatus;
+import us.codecraft.webmagic.Page;
+
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import us.codecraft.webmagic.Page;
-
-import com.dianping.merchant.robot.crawler.common.processor.iface.ICrawlerFilter;
-import com.dianping.merchant.robot.crawler.common.processor.plugins.entity.ProMessageCode;
-import com.dianping.merchant.robot.crawler.common.processor.plugins.entity.ProStatus;
-import com.google.common.collect.Lists;
-
 /**
  * 黑名单过滤
- * 
+ *
  * @author mobangwei
- * 
  */
 //@CrawlerFilterTag(priority = 2, type = 2)
 public class BlackListCrawlerFilter implements ICrawlerFilter {

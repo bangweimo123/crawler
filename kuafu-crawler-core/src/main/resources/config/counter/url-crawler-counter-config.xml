@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<counter-configs>
-	<!-- 路由配置 -->
-	<router-configs>
-		<!-- 一次domainTag爬取的数量 -->
-		<router-config key="url-crawler-count" schema="single" server-ref="counter-replica-set" />
-	</router-configs>
-</counter-configs>
