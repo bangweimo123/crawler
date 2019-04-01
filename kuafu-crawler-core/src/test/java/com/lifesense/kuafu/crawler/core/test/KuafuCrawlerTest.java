@@ -33,10 +33,10 @@ public class KuafuCrawlerTest extends BaseTest {
     @Test
     public void test() throws InterruptedException {
         InstanceFactory.getInstance("kuafuCrawlerJedisProviderFactoryBean");
-        SpiderFactory.initSpider("toutiao6983019962");
-        SpiderFactory.startSpider("toutiao6983019962");
+        SpiderFactory.initSpider("toutiao5495166052");
+        SpiderFactory.startSpider("toutiao5495166052");
         while (true) {
-            if (SpiderFactory.getSpider("toutiao6983019962").spiderIsRun()) {
+            if (SpiderFactory.getSpider("toutiao5495166052").spiderIsRun()) {
                 System.out.println(123);
                 Thread.sleep(1000l);
             }
@@ -215,8 +215,14 @@ public class KuafuCrawlerTest extends BaseTest {
     @Test
     public void imageEncodeTest() {
         String html = "<div>\\n <p>小编有一段时间没有给大家说说高血压降压药物了，今天打算借着两种降压药物给大家说一说高血压用药的一些细节。实际上，我们治疗高血压的主要目的是最大限度的降低心血管发病和死亡的总危险。由于心血管病危险性与血压之间的相关呈连续性，因此抗高血压治疗的目标是将血压恢复至正常水平。</p>\\n <p>今天要说的两种降压药物是马来酸依那普利与非洛地平，马来酸依那普利属于血管紧张素转换酶抑制剂，功能主要用于各期原发型高血压、肾性高血压、充血性心力衰竭等的治疗。非洛地平属于二氢砒啶类钙拮抗剂，主要用于轻、中度原发性高血压的治疗。</p>\\n <div class=\\\"pgc-img\\\">\\n  <img src=\\\"http://p9.pstatp.com/large/pgc-image/1528869549146363716b52d\\\" img_width=\\\"323\\\" img_height=\\\"201\\\" alt=\\\"马来酸依那普利与非洛地平，高血压用药细节要注意！\\\" inline=\\\"0\\\" />\\n  <p class=\\\"pgc-img-caption\\\"></p>\\n </div>\\n <p>马来酸依那普利常用剂量为每日10~40mg，分2~3次服。原发型高血压：每次20mg，每日1次。充血性心力衰竭和肾性高血压：每日10~40mg，起始量为每日10mg，剂量视治疗效果调节，一般每次20mg，每日1次。其不良反应较少。少数出现干咳、眩晕、头痛、疲乏、腹泻、皮疹、味觉障碍、均轻微、短暂。罕有神经血管性水肿，如出现应立即停用，并迅速就医。</p>\\n <p>非洛地平起始剂量2.5mg，一日2次，或遵医嘱。常用维持剂量每日为5mg 或10mg，必要时剂量可进一步增加，或加用其它降压药。服药应早晨用水吞服。非洛地平和其它钙拮抗药相同，在某些病人身上会导致面色潮红、头痛、头晕、心悸和疲劳，这些反应大部分具有剂量依赖性，而且是在剂量增加后开始的短时间内出现，是暂时的，应用时间延长后消失。另外非洛地平可引起与剂量有关的踝肿、牙龈或牙周炎，患者用药后可能会引起轻微的牙龈肿大。在极少数病人中可能会引起显著的低血压伴心动过速，这在易感个体可能会引起心肌缺氧。</p>\\n <div class=\\\"pgc-img\\\">\\n  <img src=\\\"http://p1.pstatp.com/large/pgc-image/1528869620791a29f93ee74\\\" img_width=\\\"800\\\" img_height=\\\"800\\\" alt=\\\"马来酸依那普利与非洛地平，高血压用药细节要注意！\\\" inline=\\\"0\\\" />\\n  <p class=\\\"pgc-img-caption\\\"></p>\\n </div>\\n <p>因为高血压患者的年龄、病程、血压水平、并发症情况以及对降压药反应和健康状况等均有很大的差异，所以降压药的选用要根据患者的个体状况，药物的作用、代谢、不良反应和药物相互作用，采用个体化给药。</p>\\n <p>在使用降压药的过程中，应该注意以下几点：</p>\\n <p>1、不宜时服时停：有的患者用降压药时服时停，血压一高吃几片，血压一降，马上停药，导致血压反弹。较严重的高血压，可以说是一种终身疾病，应长期坚持服药；</p>\\n <p>2、不宜睡前服药：睡前服药，血压下降，血流变缓慢，血液粘稠度升高，极容易导致血栓形成，引发卒中或心肌梗死。</p>\\n <p>3、不宜降压过快：有些人一旦发现高血压，恨不得立刻就把血压降下来，随意加大用药剂量，这样极容易发生意外；</p>\\n <p>4、不宜频繁换药：降压作用和降压机制不同，选择的降压药物不合适，或者用法、用量不对，降压作用就不明显。因此，高血压患者的用药方案应在医生指导下进行。</p>\\n <div class=\\\"pgc-img\\\">\\n  <img src=\\\"http://p9.pstatp.com/large/pgc-image/1528869679203859cd4fff6\\\" img_width=\\\"1280\\\" img_height=\\\"853\\\" alt=\\\"马来酸依那普利与非洛地平，高血压用药细节要注意！\\\" inline=\\\"0\\\" />\\n  <p class=\\\"pgc-img-caption\\\"></p>\\n </div>\\n <p>如果你喜欢我们的文章，请关注我们的微信号“<strong>好心舒冠心病管家</strong>”，您的关注是我们前进的动力，您的留言是我们改进的目标。关注我们。将会为您提供更多更好的文章。</p>\\n</div>";
-        String resultHtml = HtmlParserUtils.parser(html, TagParserEnum.img_parser_url);
-        LOGGER.info(resultHtml);
+        String reg = "(<img.*src\\\\s*=\\\\s*(.*?)[^>]*?>)";
+        Pattern pattern = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(html);
+        while (matcher.find()) {
+            System.out.println(matcher.start());
+        }
+//        String resultHtml = HtmlParserUtils.parser(html, TagParserEnum.img_parser_url);
+//        LOGGER.info(resultHtml);
     }
 
     @Test

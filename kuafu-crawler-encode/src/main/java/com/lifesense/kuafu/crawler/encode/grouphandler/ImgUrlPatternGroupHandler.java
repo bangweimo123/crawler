@@ -64,7 +64,7 @@ public class ImgUrlPatternGroupHandler extends SimplePatternGroupHandler {
      * @return
      */
     public static String upload(byte[] picBytes, String fileName) {
-        return fileEngine.upload("kuafu-crawler", fileName, picBytes, FileType.PNG);
+        return fileEngine.upload("kuafu-crawler", "others/" + fileName, picBytes, FileType.PNG);
     }
 
     private static class UplaodConstant {

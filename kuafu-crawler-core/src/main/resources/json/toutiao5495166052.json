@@ -9,7 +9,7 @@
     }
   },
   "customParams": {
-    "siteId": 1
+    "siteId": 2
   },
   "pageProcessor": "toutiao",
   "crawlerTrigger": [
@@ -23,8 +23,10 @@
     }
   ],
   "site": {
+    "proxy": 5,
     "charset": "UTF-8",
     "timeOut": 10000,
+    "cycleRetryTimes": 15,
     "userAgent": "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)"
   },
   "urlBuilder": {

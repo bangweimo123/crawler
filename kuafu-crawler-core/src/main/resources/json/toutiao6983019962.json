@@ -39,13 +39,6 @@
       "cssSelector": ".article-content",
       "cssSelectorAttrName": "innerhtml",
       "isList": false
-    },
-    {
-      "fieldName" : "thumbnail",
-      "cssSelector" : "#article-content img",
-      "cssSelectorAttrName" : "src",
-      "isList" : true,
-      "converter" : "imgConverter"
     }
   ]
 }

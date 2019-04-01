@@ -159,7 +159,13 @@ public class ToutiaoDownloader extends HttpClientDownloader implements IDownload
         }
         Long maxBehotTime = 0l;
         if (request.getExtra("max_behot_time") != null) {
-            maxBehotTime = (Long) request.getExtra("max_behot_time");
+            Object data = request.getExtra("max_behot_time");
+            if (data instanceof Integer) {
+                Integer intValue = (Integer) request.getExtra("max_behot_time");
+                maxBehotTime = Long.valueOf(intValue);
+            } else {
+                maxBehotTime = (Long) request.getExtra("max_behot_time");
+            }
         }
         try {
             ScriptEngineManager manager = new ScriptEngineManager();

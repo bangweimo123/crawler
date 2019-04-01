@@ -1,6 +1,7 @@
 package com.lifesense.kuafu.crawler.encode.html;
 
 import com.lifesense.kuafu.crawler.encode.grouphandler.IPatternGroupHandler;
+import com.lifesense.kuafu.crawler.encode.grouphandler.ImgUrlPatternGroupHandler;
 import com.lifesense.kuafu.crawler.encode.tag.parser.TagParserEnum;
 import org.apache.commons.lang3.StringUtils;
 
