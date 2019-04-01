@@ -61,6 +61,9 @@ public class CrawlerProxyFactory {
 
     public static ICrawlerProxyBuilder getProxy(String proxyName) {
         Map<String, ICrawlerProxyBuilder> cache = SingleHolder.getCache();
+        if (MapUtils.isEmpty(cache)) {
+            return null;
+        }
         if (StringUtils.isEmpty(proxyName) || !cache.containsKey(proxyName)) {
             return cache.values().iterator().next();
         }

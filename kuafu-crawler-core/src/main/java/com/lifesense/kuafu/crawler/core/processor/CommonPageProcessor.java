@@ -7,6 +7,7 @@ import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerFilter;
 import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerUrlHandler;
 import org.apache.commons.collections.CollectionUtils;
 
+import org.apache.commons.lang3.StringUtils;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
@@ -21,9 +22,8 @@ import com.lifesense.kuafu.crawler.core.processor.plugins.filters.CrawlerFilterF
 
 /**
  * 一个公用的page Processor
- * 
+ *
  * @author mobangwei
- * 
  */
 public class CommonPageProcessor implements PageProcessor {
 
@@ -104,13 +104,15 @@ public class CommonPageProcessor implements PageProcessor {
     public void process(Page page) {
         ProcessorContext.getContext(page)
 
-        .addParam(ProcessorContextConstant.BASE_URL, config.getCrawlerBaseInfo().getBaseUrl())
+                .addParam(ProcessorContextConstant.BASE_URL, config.getCrawlerBaseInfo().getBaseUrl())
 
-        .addParam(ProcessorContextConstant.CURRENT_URL, page.getRequest().getUrl())
+                .addParam(ProcessorContextConstant.CURRENT_URL, page.getRequest().getUrl())
 
-        .addParam(ProcessorContextConstant.DOMAIN_TAG, config.getDomainTag())
+                .addParam(ProcessorContextConstant.DOMAIN_TAG, config.getDomainTag())
 
-        .addParam(ProcessorContextConstant.LIMIT_MONTH, config.getCrawlerBaseInfo().getLimitMonth());
+                .addParam(ProcessorContextConstant.LIMIT_MONTH, config.getCrawlerBaseInfo().getLimitMonth())
+
+                .addParam(ProcessorContextConstant.CUSTOM_PARAMS, config.getCustomParams());
         ProStatus proStatus = ProStatus.success();
 
 
@@ -142,8 +144,11 @@ public class CommonPageProcessor implements PageProcessor {
             }
         }
         if (proStatus.isSuccess()) {
-            // 页面field提取
-            proStatus = fieldHandler.pageField(page, config.getFieldBuilder());
+            //主链接不做相应的field处理
+            if (!StringUtils.equalsIgnoreCase(page.getUrl().get(), config.getCrawlerBaseInfo().getBaseUrl())) {
+                // 页面field提取
+                proStatus = fieldHandler.pageField(page, config.getFieldBuilder());
+            }
         }
         if (proStatus.isSuccess()) {
             // 处理后的过滤

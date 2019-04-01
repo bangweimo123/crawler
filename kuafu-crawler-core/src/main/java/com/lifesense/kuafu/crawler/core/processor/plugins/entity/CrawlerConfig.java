@@ -1,19 +1,24 @@
 package com.lifesense.kuafu.crawler.core.processor.plugins.entity;
 
+import com.lifesense.kuafu.crawler.core.processor.plugins.proxy.DefaultSite;
+
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 public class CrawlerConfig implements Serializable {
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -7796710549377294662L;
     /**
      * 标注是哪个网站,默认为该json文件的文件名
      */
     private String domainTag;
-
+    private String pageProcessor;
     private DefaultSite site = new DefaultSite();
+
+    private Map<String, Object> customParams;
 
     private IUrlBuilder urlBuilder;
 
@@ -23,6 +28,13 @@ public class CrawlerConfig implements Serializable {
 
     private List<CrawlerTrigger> crawlerTrigger;
 
+    public Map<String, Object> getCustomParams() {
+        return customParams;
+    }
+
+    public void setCustomParams(Map<String, Object> customParams) {
+        this.customParams = customParams;
+    }
 
     public String getDomainTag() {
         return domainTag;
@@ -30,6 +42,14 @@ public class CrawlerConfig implements Serializable {
 
     public void setDomainTag(String domainTag) {
         this.domainTag = domainTag;
+    }
+
+    public String getPageProcessor() {
+        return pageProcessor;
+    }
+
+    public void setPageProcessor(String pageProcessor) {
+        this.pageProcessor = pageProcessor;
     }
 
     public CrawlerBaseInfo getCrawlerBaseInfo() {

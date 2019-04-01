@@ -1,0 +1,58 @@
+{
+  "comment": "一点咨询",
+  "domainTag": "yidianzixun",
+  "crawlerBaseInfo": {
+    "baseUrl": "https://www.yidianzixun.com/channel/m1017507",
+    "threadCount": 20,
+    "downloaderPlugins": {
+      "https://www\\.yidianzixun\\.com/channel/m1017507": "jsDownloader",
+      "https://www\\.yidianzixun\\.com/article/\\w+": "jsDownloader"
+    }
+  },
+  "crawlerTrigger": [
+    {
+      "type": "simple_once",
+      "value": false
+    },
+    {
+      "type": "time",
+      "value": "0 0 9 * * ?"
+    }
+  ],
+  "site": {
+    "proxy": 3,
+    "charset": "UTF-8",
+    "timeOut": 10000
+  },
+  "urlBuilder": {
+    "baseUrlFilter": "https://www\\.yidianzixun\\.com/channel/m1017507",
+    "urlFilterPlugins": {
+      "(https://www\\.yidianzixun\\.com/channel/m1017507)": "(https://www\\.yidianzixun\\.com/article/\\w+)"
+    },
+    "baseCount": 2000
+  },
+  "fieldBuilder": [
+    {
+      "fieldName": "keyword",
+      "xpathSelector": "//meta[@name='keywords']/@content",
+      "isList": false,
+      "converter": "stringSplitConverter",
+      "converterParam": "\\?,|"
+    },
+    {
+      "fieldName": "title",
+      "xpathSelector": "//div[@class='main']/div[@class='left-wrapper']/h2/text()",
+      "isList": false
+    },
+    {
+      "fieldName": "source",
+      "xpathSelector": "//div[@class='main']/div[@class='left-wrapper']/div[@class='meta']/a[@class='doc-source']/text()",
+      "isList": false
+    },
+    {
+      "fieldName": "content",
+      "xpathSelector": "//div[@class='main']/div[@class='left-wrapper']/div[@class='content-bd']",
+      "isList": false
+    }
+  ]
+}

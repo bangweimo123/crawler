@@ -1,0 +1,51 @@
+{
+  "comment": "今日头条",
+  "domainTag": "toutiao6983019962",
+  "crawlerBaseInfo": {
+    "baseUrl": "toutiao-user:6983019962|toutiao-mid:6983010053|serialNumber:0",
+    "threadCount": 20,
+    "downloaderPlugins": {
+      "toutiao-user:\\d+\\|toutiao-mid:\\d+\\|serialNumber:\\d+": "toutiaoDownloader"
+    }
+  },
+  "customParams": {
+    "siteId": 2
+  },
+  "pageProcessor": "toutiao",
+  "crawlerTrigger": [
+    {
+      "type": "simple_once",
+      "value": false
+    },
+    {
+      "type": "time",
+      "value": "0 0 10 * * ?"
+    }
+  ],
+  "site": {
+    "proxy": 5,
+    "charset": "UTF-8",
+    "timeOut": 10000,
+    "cycleRetryTimes": 15,
+    "userAgent": "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)"
+  },
+  "urlBuilder": {
+    "baseUrlFilter": "(https://www\\.toutiao\\.com/item/\\w+/)",
+    "baseCount": 2000
+  },
+  "fieldBuilder": [
+    {
+      "fieldName": "content",
+      "cssSelector": ".article-content",
+      "cssSelectorAttrName": "innerhtml",
+      "isList": false
+    },
+    {
+      "fieldName" : "thumbnail",
+      "cssSelector" : "#article-content img",
+      "cssSelectorAttrName" : "src",
+      "isList" : true,
+      "converter" : "imgConverter"
+    }
+  ]
+}

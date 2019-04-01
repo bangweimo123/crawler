@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="
-	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+                            http://code.alibabatech.com/schema/dubbo http://files.sports.lifesense.com/xsd/dubbo.xsd">
     <context:component-scan base-package="com.lifesense.*"/>
     <context:annotation-config/>
     <bean id="springLocator" class="com.lifesense.kuafu.crawler.core.processor.spring.SpringLocator">
     </bean>
+    <context:property-placeholder
+            ignore-unresolvable="true" location="classpath*:*.properties"/>
+    <!-- 使用disconf必须添加以下配置 -->
+    <bean id="disconfMgrBean" class="com.lifesense.support.disconf.LsDisconfMgrBean" destroy-method="destroy">
+        <property name="configs" value="redis,log4j2"/>
+    </bean>
 
+    <bean id="disconfMgrBean2" class="com.baidu.disconf.client.DisconfMgrBeanSecond" init-method="init"
+          destroy-method="destroy"></bean>
+    <!-- dubbo基本配置 -->
+    <dubbo:application name="kuafu-crawler-service-consumer"></dubbo:application>
+    <dubbo:registry protocol="zookeeper" address="${zookeeper.url}"></dubbo:registry>
+    <dubbo:protocol name="dubbo" host="${dubbo.host}" port="${dubbo.port}" accepts="${dubbo.accepts}"
+                    threads="${dubbo.threads}"/>
+
+    <dubbo:reference id="crawlerDataService" interface="com.lifesense.soa.contentmanagement.api.CrawlerDataService"
+                     check="false" version="${lifesense.dubbo.version}"/>
 </beans>

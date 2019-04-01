@@ -1,20 +1,22 @@
 package com.lifesense.kuafu.crawler.core.processor.spider;
 
 import com.lifesense.kuafu.crawler.core.processor.CommonPageProcessor;
+import com.lifesense.kuafu.crawler.core.processor.TouTiaoPageProcessor;
 import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerConfigParser;
 import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerResultHandler;
 import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerUrlManager;
 import com.lifesense.kuafu.crawler.core.processor.iface.impl.JsonCrawlerConfigParser;
 import com.lifesense.kuafu.crawler.core.processor.plugins.downloader.CrawlerDownloaderFactory;
 import com.lifesense.kuafu.crawler.core.processor.plugins.entity.CrawlerConfig;
-import com.lifesense.kuafu.crawler.core.processor.plugins.pipeline.AvatorLoggerPipeLine;
+import com.lifesense.kuafu.crawler.core.processor.plugins.pipeline.LoggerPipeLine;
 import com.lifesense.kuafu.crawler.core.processor.plugins.pipeline.LSResultPipeLine;
 import com.lifesense.kuafu.crawler.core.processor.plugins.resulthandler.CrawlerResultHandlerFactory;
-import com.lifesense.kuafu.crawler.core.processor.plugins.scheduler.DpUrlManagerScheduler;
+import com.lifesense.kuafu.crawler.core.processor.plugins.scheduler.UrlManagerScheduler;
 import com.lifesense.kuafu.crawler.core.processor.plugins.urlmanager.CrawlerUrlManagerFactory;
 import com.lifesense.kuafu.crawler.core.processor.spider.trigger.CrawlerTriggerController;
 import com.lifesense.kuafu.crawler.core.processor.utils.ThreadPoolUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -43,7 +45,12 @@ public class SpiderFactory {
             Assert.notNull(config, "crawlerConfig parser error");
             LOGGER.info("parser config success");
             // processor 定义公用执行器
-            CommonPageProcessor processor = new CommonPageProcessor(config);
+            CommonPageProcessor processor = null;
+            if (StringUtils.isNotBlank(config.getPageProcessor())) {
+                processor = new TouTiaoPageProcessor(config);
+            } else {
+                processor = new CommonPageProcessor(config);
+            }
             Assert.notNull(processor, "processor init error");
             LOGGER.info("parser processor success");
             // urlManager 获取URL管理器
@@ -61,7 +68,7 @@ public class SpiderFactory {
 
             LOGGER.info("parser basePipeLine success");
             // scheduler 公用调度器
-            Scheduler scheduler = new DpUrlManagerScheduler(urlManager, config);
+            Scheduler scheduler = new UrlManagerScheduler(urlManager, config);
             Assert.notNull(scheduler, "scheduler init error");
 
             LOGGER.info("parser scheduler success");
@@ -81,7 +88,7 @@ public class SpiderFactory {
 
                     .addUrl(config.getCrawlerBaseInfo().getBaseUrl())
 
-                    .addPipeline(new AvatorLoggerPipeLine())
+                    .addPipeline(new LoggerPipeLine())
 
                     .addPipeline(dpResultPipeLine)
 
@@ -148,6 +155,10 @@ public class SpiderFactory {
         } catch (Exception e) {
             LOGGER.error("exception for startSpider", e);
         }
+    }
+
+    public static LSSpider getSpider(String domainTag) {
+        return spiderCache.get(domainTag);
     }
 
 }

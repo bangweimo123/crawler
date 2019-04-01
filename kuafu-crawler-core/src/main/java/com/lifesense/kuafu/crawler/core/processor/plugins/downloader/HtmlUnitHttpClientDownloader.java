@@ -11,6 +11,7 @@ import java.util.Set;
 
 import com.lifesense.kuafu.crawler.core.processor.annotation.CrawlerDownloaderTag;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.downloader.HttpClientDownloader;
+import us.codecraft.webmagic.downloader.selenium.SeleniumDownloader;
 import us.codecraft.webmagic.selector.PlainText;
 import us.codecraft.webmagic.utils.HttpConstant;
 
@@ -41,10 +43,13 @@ public class HtmlUnitHttpClientDownloader extends HttpClientDownloader {
         WebClient webClient = new WebClient();
         webClient.getOptions().setJavaScriptEnabled(true);
         webClient.getOptions().setActiveXNative(false);
-        webClient.getOptions().setCssEnabled(true);
+        webClient.getOptions().setCssEnabled(false);
         webClient.getOptions().setThrowExceptionOnScriptError(false);
+        webClient.getOptions().setTimeout(6000);
+        webClient.getOptions().setRedirectEnabled(true);
         webClient.setAjaxController(new NicelyResynchronizingAjaxController());
         webClient.getCookieManager().setCookiesEnabled(true);
+
         return webClient;
     }
 
@@ -72,15 +77,16 @@ public class HtmlUnitHttpClientDownloader extends HttpClientDownloader {
         } else {
             acceptStatCode = Sets.newHashSet(200);
         }
-        logger.info("downloading page {}", request.getUrl());
+         logger.info("downloading page {}", request.getUrl());
         WebResponse webResponse = null;
         int statusCode = 0;
         try {
             WebRequest webRequest = getWebRequest(request, site, headers);
-            webRequest.setCharset(charset);
+            webRequest.setCharset(Charset.forName(charset));
 
             doHandlerWebClient(webClient);
             HtmlPage htmlunitPage = webClient.getPage(webRequest);
+            webClient.waitForBackgroundJavaScript(20000);
             webResponse = htmlunitPage.getWebResponse();
             statusCode = webResponse.getStatusCode();
             request.putExtra(Request.STATUS_CODE, statusCode);
@@ -122,9 +128,9 @@ public class HtmlUnitHttpClientDownloader extends HttpClientDownloader {
         if (charset == null) {
             byte[] contentBytes = IOUtils.toByteArray(webResponse.getContentAsStream());
 
-            String htmlCharset = webResponse.getContentCharsetOrNull();
+            Charset htmlCharset = webResponse.getContentCharsetOrNull();
             if (htmlCharset != null) {
-                return new String(contentBytes, htmlCharset);
+                return new String(contentBytes, htmlCharset.name());
             } else {
                 logger.warn("Charset autodetect failed, use {} as charset. Please specify charset in Site.setCharset()", Charset.defaultCharset());
                 return new String(contentBytes);
@@ -142,6 +148,9 @@ public class HtmlUnitHttpClientDownloader extends HttpClientDownloader {
                 webRequest.setAdditionalHeader(headerEntry.getKey(), headerEntry.getValue());
             }
         }
+        if (StringUtils.isNotBlank(site.getUserAgent())) {
+            webRequest.setAdditionalHeader("User-Agent", site.getUserAgent());
+        }
         if (site.getHttpProxyPool().isEnable()) {
             HttpHost host = site.getHttpProxyFromPool();
             webRequest.setProxyHost(host.getHostName());
@@ -149,7 +158,7 @@ public class HtmlUnitHttpClientDownloader extends HttpClientDownloader {
             request.putExtra(Request.PROXY, host);
 
         }
-        webRequest.setCharset(site.getCharset());
+        webRequest.setCharset(Charset.forName(site.getCharset()));
         return webRequest;
     }
 

@@ -4,7 +4,6 @@ import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerUrlManager;
 import com.lifesense.kuafu.crawler.core.processor.plugins.urlmanager.CrawlerUrl;
 import org.springframework.stereotype.Component;
 
-@Component
 public class TodayNewCrawlerUrlManager implements ICrawlerUrlManager {
     @Override
     public boolean isExistUrl(String url) {

@@ -1,5 +1,6 @@
 package com.lifesense.kuafu.crawler.core.processor.spider;
 
+import com.lifesense.kuafu.crawler.core.processor.plugins.downloader.LSHttpClientDownloader;
 import com.lifesense.kuafu.crawler.core.processor.plugins.entity.ProMessageCode;
 import com.lifesense.kuafu.crawler.core.processor.plugins.entity.ProStatus;
 import com.lifesense.kuafu.crawler.core.processor.utils.RedisCountUtils;
@@ -12,15 +13,15 @@ import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.SpiderListener;
 import us.codecraft.webmagic.downloader.Downloader;
+import us.codecraft.webmagic.downloader.HttpClientDownloader;
+import us.codecraft.webmagic.pipeline.ConsolePipeline;
 import us.codecraft.webmagic.pipeline.Pipeline;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.scheduler.Scheduler;
+import us.codecraft.webmagic.selector.thread.CountableThreadPool;
 import us.codecraft.webmagic.utils.UrlUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
@@ -36,6 +37,8 @@ public class LSSpider extends Spider {
     protected String domainTag;
 
     protected String baseUrl;
+
+    private Date startTime;
     /**
      * 用以存储针对特定的URL正则去匹配特定的downloader
      */
@@ -53,8 +56,9 @@ public class LSSpider extends Spider {
         return baseUrl;
     }
 
-    public void setBaseUrl(String baseUrl) {
+    public LSSpider setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+        return this;
     }
 
     public Map<String, Downloader> getDownloaderPlugin() {
@@ -349,6 +353,13 @@ public class LSSpider extends Spider {
         this.start();
     }
 
+    public void start() {
+        Thread thread = new Thread(this);
+        thread.setName("LSSpider-Async-Thread-" + this.getDomainTag());
+        thread.setDaemon(false);
+        thread.start();
+    }
+
     public void stopSpider() {
         if (spiderIsRun()) {
             this.stop();
@@ -369,6 +380,30 @@ public class LSSpider extends Spider {
      */
     public boolean spiderIsRun() {
         return stat.get() == STAT_RUNNING;
+    }
+
+    protected void initComponent() {
+        if (downloader == null) {
+            this.downloader = new LSHttpClientDownloader();
+        }
+        if (pipelines.isEmpty()) {
+            pipelines.add(new ConsolePipeline());
+        }
+        downloader.setThread(threadNum);
+        if (threadPool == null || threadPool.isShutdown()) {
+            if (executorService != null && !executorService.isShutdown()) {
+                threadPool = new CountableThreadPool(threadNum, executorService);
+            } else {
+                threadPool = new CountableThreadPool(threadNum);
+            }
+        }
+        if (startRequests != null) {
+            for (Request request : startRequests) {
+                scheduler.push(request, this);
+            }
+            startRequests.clear();
+        }
+        startTime = new Date();
     }
 
     // 方法重写
@@ -406,5 +441,9 @@ public class LSSpider extends Spider {
             }
         }
         sleep(site.getSleepTime());
+    }
+
+    public Date getStartTime() {
+        return startTime;
     }
 }

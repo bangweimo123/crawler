@@ -16,6 +16,7 @@ public class CrawlerCommonConstants {
         public static final long PERIOD = 10800;
         public static final int SCORE = 1;
     }
+
     public static class JavaScriptConstant {
         public static final String PARAM_PAGE = "page";
         public static final String PARAM_METHODNAME = "methodName";
@@ -28,11 +29,13 @@ public class CrawlerCommonConstants {
         public static final String CURRENT_URL = "currentUrl";
         public static final String DOMAIN_TAG = "domainTag";
         public static final String LIMIT_MONTH = "limitMonth";
+        public static final String CUSTOM_PARAMS = "customParams";
     }
 
 
     public static class URLBuilderConstant {
         public static final String URL_BUILDER_NAME = "urlBuilder";
+        public static final String RELATION_DATA = "relationData";
     }
 
     public static class PageGroupConstant {

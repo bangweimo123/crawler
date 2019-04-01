@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import us.codecraft.webmagic.Page;
 
 @CrawlerConverterTag(name = "dateConverter")
 public class DateCrawlerConverter implements ICrawlerConverter {
@@ -18,7 +19,7 @@ public class DateCrawlerConverter implements ICrawlerConverter {
     private static final String DEFAULT_DATEFORMAT = "yyyy-MM-dd";
 
     @Override
-    public Object converter(Object sourceData, Object params) {
+    public Object converter(Page page, Object sourceData, Object params) {
         String dateFormat = DEFAULT_DATEFORMAT;
         if (null != params) {
             dateFormat = (String) params;

@@ -14,6 +14,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import us.codecraft.webmagic.Page;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +28,7 @@ public class ImgUrlCrawlerConverter implements ICrawlerConverter {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImgUrlCrawlerConverter.class);
 
     @Override
-    public Object converter(Object sourceData, Object params) {
+    public Object converter(Page page, Object sourceData, Object params) {
         if (null != sourceData) {
             String imgUrl = (String) sourceData;
             if (isLegalUrl(imgUrl)) {

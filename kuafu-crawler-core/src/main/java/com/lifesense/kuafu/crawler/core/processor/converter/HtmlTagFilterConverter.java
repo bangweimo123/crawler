@@ -8,6 +8,7 @@ import org.htmlcleaner.*;
 import org.htmlcleaner.conditional.ITagNodeCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import us.codecraft.webmagic.Page;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class HtmlTagFilterConverter implements ICrawlerConverter {
     private static final String exculde_xpath = "excludeXpath";
 
     @Override
-    public Object converter(Object sourceData, Object params) {
+    public Object converter(Page page, Object sourceData, Object params) {
         if (null == sourceData) {
             return null;
         }

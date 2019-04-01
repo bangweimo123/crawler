@@ -1,0 +1,42 @@
+{
+  "comment": "今日头条",
+  "domainTag": "toutiao5495166052",
+  "crawlerBaseInfo": {
+    "baseUrl": "toutiao-user:5495166052|toutiao-mid:5859366481|serialNumber:0",
+    "threadCount": 20,
+    "downloaderPlugins": {
+      "toutiao-user:\\d+\\|toutiao-mid:\\d+\\|serialNumber:\\d+": "toutiaoDownloader"
+    }
+  },
+  "customParams": {
+    "siteId": 1
+  },
+  "pageProcessor": "toutiao",
+  "crawlerTrigger": [
+    {
+      "type": "simple_once",
+      "value": false
+    },
+    {
+      "type": "time",
+      "value": "0 0 10 * * ?"
+    }
+  ],
+  "site": {
+    "charset": "UTF-8",
+    "timeOut": 10000,
+    "userAgent": "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)"
+  },
+  "urlBuilder": {
+    "baseUrlFilter": "(https://www\\.toutiao\\.com/item/\\w+/)",
+    "baseCount": 2000
+  },
+  "fieldBuilder": [
+    {
+      "fieldName": "content",
+      "cssSelector": ".article-content",
+      "cssSelectorAttrName": "innerhtml",
+      "isList": false
+    }
+  ]
+}

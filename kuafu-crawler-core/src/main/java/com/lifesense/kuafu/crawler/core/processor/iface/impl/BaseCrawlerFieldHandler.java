@@ -10,6 +10,7 @@ import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerConverter;
 import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerFieldHandler;
 import com.lifesense.kuafu.crawler.core.processor.plugins.entity.IFieldBuilder;
 import com.lifesense.kuafu.crawler.core.processor.plugins.entity.ProStatus;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import us.codecraft.webmagic.Page;
@@ -21,14 +22,19 @@ import com.lifesense.kuafu.crawler.core.processor.utils.JavaScriptExcutorUtils;
 
 /**
  * 基本的field处理器
- * 
+ *
  * @author mobangwei
- * 
  */
 public class BaseCrawlerFieldHandler implements ICrawlerFieldHandler {
 
     @Override
     public ProStatus pageField(Page page, List<IFieldBuilder> fieldBuilders) {
+        Map<String, Object> relationData = (Map<String, Object>) page.getRequest().getExtra(CrawlerCommonConstants.URLBuilderConstant.RELATION_DATA);
+        if (MapUtils.isNotEmpty(relationData)) {
+            for (Map.Entry<String, Object> relationEntry : relationData.entrySet()) {
+                page.putField(relationEntry.getKey(), relationEntry.getValue());
+            }
+        }
         for (IFieldBuilder fieldBuilder : fieldBuilders) {
             Object result = null;
             String fieldName = fieldBuilder.getFieldName();
@@ -75,7 +81,7 @@ public class BaseCrawlerFieldHandler implements ICrawlerFieldHandler {
             if (StringUtils.isNotBlank(fieldBuilder.getConverter())) {
                 Object converterParam = fieldBuilder.getConverterParam();
                 ICrawlerConverter converter = ConverterFactory.getConverter(fieldBuilder.getConverter());
-                result = converter.converter(result, converterParam);
+                result = converter.converter(page, result, converterParam);
             }
             //设置默认值
             if (StringUtils.isNotBlank(fieldBuilder.getDefaultValue())) {

@@ -5,12 +5,13 @@ import java.util.regex.Pattern;
 
 import com.lifesense.kuafu.crawler.core.processor.annotation.CrawlerConverterTag;
 import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerConverter;
+import us.codecraft.webmagic.Page;
 
 @CrawlerConverterTag(name = "stringTrimConverter")
 public class StringTrimCrawlerConverter implements ICrawlerConverter {
 
     @Override
-    public Object converter(Object sourceData, Object params) {
+    public Object converter(Page page, Object sourceData, Object params) {
         if (null == sourceData) {
             return null;
         }

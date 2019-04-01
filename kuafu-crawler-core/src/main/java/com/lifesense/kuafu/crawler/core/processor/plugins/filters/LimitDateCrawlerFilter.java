@@ -15,9 +15,8 @@ import com.lifesense.kuafu.crawler.core.processor.plugins.entity.ProcessorContex
 
 /**
  * 日期过滤，将里面的日期过滤掉
- * 
+ *
  * @author mobangwei
- * 
  */
 @CrawlerFilterTag(priority = 5, type = CrawlerCommonConstants.FilterConstant.AFTER_FILTER_TYPE)
 public class LimitDateCrawlerFilter implements ICrawlerFilter {
@@ -26,6 +25,9 @@ public class LimitDateCrawlerFilter implements ICrawlerFilter {
     @Override
     public ProStatus doFilter(Page page) {
         Date sourceDate = page.getResultItems().get("date");
+        if (null == sourceDate) {
+            return ProStatus.success();
+        }
         Integer limitMonth = (Integer) ProcessorContext.getContext(page).getParam(CrawlerCommonConstants.ProcessorContextConstant.LIMIT_MONTH);
         Date limitMonthDate = getDate(limitMonth);
         if (null != sourceDate && limitMonthDate.compareTo(sourceDate) <= 0) {

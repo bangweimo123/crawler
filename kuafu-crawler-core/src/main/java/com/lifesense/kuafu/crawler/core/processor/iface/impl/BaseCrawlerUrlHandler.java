@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.alibaba.dubbo.common.json.JSON;
+import com.alibaba.dubbo.common.json.ParseException;
+import com.alibaba.fastjson.JSONObject;
 import com.lifesense.kuafu.crawler.core.constants.CrawlerCommonConstants;
 import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerUrlHandler;
 import com.lifesense.kuafu.crawler.core.processor.spider.SpiderFactory;
@@ -42,7 +45,16 @@ public class BaseCrawlerUrlHandler implements ICrawlerUrlHandler {
         ProcessorContext context = ProcessorContext.getContext(page);
 
         CommonUrlBuilder newUrlBuilder = null;
-        newUrlBuilder = (CommonUrlBuilder) page.getRequest().getExtra(CrawlerCommonConstants.URLBuilderConstant.URL_BUILDER_NAME);
+        Object obj = page.getRequest().getExtra(CrawlerCommonConstants.URLBuilderConstant.URL_BUILDER_NAME);
+        if (obj instanceof JSONObject) {
+            try {
+                newUrlBuilder = JSON.parse(((JSONObject) obj).toJSONString(), CommonUrlBuilder.class);
+            } catch (ParseException e) {
+                LOGGER.warn("exception for parseException", e);
+            }
+        } else {
+            newUrlBuilder = (CommonUrlBuilder) obj;
+        }
         if (null == newUrlBuilder) {
             newUrlBuilder = new CommonUrlBuilder();
         }
@@ -99,6 +111,10 @@ public class BaseCrawlerUrlHandler implements ICrawlerUrlHandler {
                     }
                     List<String> allLinkes = linkSelectable.all();
                     if (CollectionUtils.isNotEmpty(allLinkes)) {
+                        //TODO urlrewrite
+                        for (String link : allLinkes) {
+                            link.replace("/item", "");
+                        }
                         extras.put(CrawlerCommonConstants.URLBuilderConstant.URL_BUILDER_NAME, newUrlBuilder);
                         addTargetRequests(page, allLinkes, extras, urlBuilder.getMethod());
                     }
@@ -156,7 +172,8 @@ public class BaseCrawlerUrlHandler implements ICrawlerUrlHandler {
         return ProStatus.success();
     }
 
-    private void addTargetRequests(Page page, List<String> requestStrings, Map<String, Object> extras, String method) {
+    @Override
+    public void addTargetRequests(Page page, List<String> requestStrings, Map<String, Object> extras, String method) {
         synchronized (page.getTargetRequests()) {
             for (String s : requestStrings) {
                 if (StringUtils.isBlank(s) || s.equals("#")) {
@@ -182,12 +199,31 @@ public class BaseCrawlerUrlHandler implements ICrawlerUrlHandler {
      * @param requestString
      */
     @SuppressWarnings("unused")
-    private void addTargetRequest(Page page, String requestString, Map<String, Object> extras, String method) {
+    @Override
+    public void addTargetRequest(Page page, String requestString, Map<String, Object> extras, String method) {
         if (StringUtils.isBlank(requestString) || requestString.equals("#")) {
             return;
         }
         synchronized (page.getTargetRequests()) {
             requestString = UrlUtils.canonicalizeUrl(requestString, page.getUrl().toString());
+            Request request = new Request(requestString);
+            if (StringUtils.isNotEmpty(method)) {
+                if (HttpConstant.Method.POST.equalsIgnoreCase(method)) {
+                    extras.put(CrawlerCommonConstants.RequestParamConstant.NAME_VALUE_PAIR, new BasicNameValuePair[]{});
+                }
+                request.setMethod(method);
+            }
+            request.setExtras(extras);
+            page.getTargetRequests().add(request);
+        }
+    }
+
+    @Override
+    public void addTargetRequestWithoutCanno(Page page, String requestString, Map<String, Object> extras, String method) {
+        if (StringUtils.isBlank(requestString) || requestString.equals("#")) {
+            return;
+        }
+        synchronized (page.getTargetRequests()) {
             Request request = new Request(requestString);
             if (StringUtils.isNotEmpty(method)) {
                 if (HttpConstant.Method.POST.equalsIgnoreCase(method)) {

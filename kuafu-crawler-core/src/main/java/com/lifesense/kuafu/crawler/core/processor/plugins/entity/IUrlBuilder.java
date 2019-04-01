@@ -7,13 +7,12 @@ import us.codecraft.webmagic.utils.HttpConstant;
 
 /**
  * url处理器,必须序列化，存redis
- * 
+ *
  * @author mobangwei
- * 
  */
 public class IUrlBuilder implements Serializable {
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1179466109783320140L;
     /**
@@ -27,7 +26,7 @@ public class IUrlBuilder implements Serializable {
     public String baseUrlFilter;
     /**
      * 该url期望爬取深度
-     * 
+     *
      * @return
      */
     public Integer baseDeep;
@@ -92,5 +91,4 @@ public class IUrlBuilder implements Serializable {
     public void setBaseCount(Integer baseCount) {
         this.baseCount = baseCount;
     }
-
 }

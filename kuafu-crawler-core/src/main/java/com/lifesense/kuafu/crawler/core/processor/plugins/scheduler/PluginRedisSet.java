@@ -60,8 +60,9 @@ public class PluginRedisSet extends RedisSet {
             if (!JedisProviderFactory.isCluster(this.groupName)) {
                 var1 = JedisProviderFactory.getBinaryJedisCommands(this.groupName).hset(this.key, fieldKey, data);
                 return var1;
+            }else {
+                var1 = JedisProviderFactory.getBinaryJedisClusterCommands(this.groupName).hset(this.key, fieldKey, data);
             }
-            var1 = JedisProviderFactory.getBinaryJedisClusterCommands(this.groupName).hset(this.key, fieldKey, data);
         } finally {
             JedisProviderFactory.getJedisProvider(this.groupName).release();
         }
@@ -112,6 +113,5 @@ public class PluginRedisSet extends RedisSet {
         }
         return var1;
     }
-
 
 }

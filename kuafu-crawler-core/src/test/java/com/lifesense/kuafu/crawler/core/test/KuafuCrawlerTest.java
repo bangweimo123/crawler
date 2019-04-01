@@ -1,6 +1,9 @@
 package com.lifesense.kuafu.crawler.core.test;
 
 import com.alibaba.fastjson.JSON;
+import com.lifesense.base.spring.InstanceFactory;
+import com.lifesense.kuafu.crawler.core.processor.plugins.downloader.ToutiaoDownloader;
+import com.lifesense.kuafu.crawler.core.processor.plugins.filters.BaseImgCrawlerFilter;
 import com.lifesense.kuafu.crawler.encode.html.HtmlParserUtils;
 import com.lifesense.kuafu.crawler.encode.tag.parser.TagParserEnum;
 import com.lifesense.kuafu.crawler.core.base.BaseTest;
@@ -9,8 +12,7 @@ import com.lifesense.kuafu.crawler.core.processor.TestPageProcessor;
 import com.lifesense.kuafu.crawler.core.processor.converter.HtmlTagFilterConverter;
 import com.lifesense.kuafu.crawler.core.processor.converter.StringTrimCrawlerConverter;
 import com.lifesense.kuafu.crawler.core.processor.iface.ICrawlerFilter;
-import com.lifesense.kuafu.crawler.core.processor.plugins.downloader.HtmlUnitHttpClientDownloader;
-import com.lifesense.kuafu.crawler.core.processor.plugins.entity.DefaultSite;
+import com.lifesense.kuafu.crawler.core.processor.plugins.proxy.DefaultSite;
 import com.lifesense.kuafu.crawler.core.processor.plugins.filters.CrawlerFilterFactory;
 import com.lifesense.kuafu.crawler.core.processor.spider.SpiderFactory;
 import com.lifesense.kuafu.crawler.core.processor.utils.DomainTagUtils;
@@ -29,9 +31,16 @@ import java.util.regex.Pattern;
 public class KuafuCrawlerTest extends BaseTest {
 
     @Test
-    public void test() {
-        SpiderFactory.initSpider("zhcyw");
-        System.out.println(123);
+    public void test() throws InterruptedException {
+        InstanceFactory.getInstance("kuafuCrawlerJedisProviderFactoryBean");
+        SpiderFactory.initSpider("toutiao6983019962");
+        SpiderFactory.startSpider("toutiao6983019962");
+        while (true) {
+            if (SpiderFactory.getSpider("toutiao6983019962").spiderIsRun()) {
+                System.out.println(123);
+                Thread.sleep(1000l);
+            }
+        }
     }
 
     @Test
@@ -79,7 +88,8 @@ public class KuafuCrawlerTest extends BaseTest {
         params.put(CrawlerCommonConstants.JavaScriptConstant.PARAM_DATA, data);
         params.put(CrawlerCommonConstants.JavaScriptConstant.PARAM_METHODNAME, CrawlerCommonConstants.JavaScriptConstant.DEFAULT_METHODNAME);
         Object targetData = JavaScriptExcutorUtils.eval(script, params, null);
-        targetData = new StringTrimCrawlerConverter().converter(targetData, null);
+        Page page = new Page();
+        targetData = new StringTrimCrawlerConverter().converter(page, targetData, null);
         System.out.println(targetData);
     }
 
@@ -97,7 +107,7 @@ public class KuafuCrawlerTest extends BaseTest {
 
     @Test
     public void htmlTest() {
-        String url = "http://www.cffw.net/zhkcw/11344.html";
+        String url = "https://news.qq.com/";
         String urlPattern = "(http://www\\.cffw\\.net/zhkcw/\\w+\\.html)";
         ResultItems result = Spider.create(new TestPageProcessor(url, "GBK", urlPattern)).get(url);
         String html = result.get("html");
@@ -106,7 +116,7 @@ public class KuafuCrawlerTest extends BaseTest {
     }
 
     @Test
-    public void realHtmlTest() {
+    public void building() {
         // String html =
         // "<p style=\"white-space: normal;\"><span style=\"line-height: 1.4em;\">近日</span><span style=\"line-height: 1.4em;\">看到一条消息：新美大（</span>Internet Plus Holdings.LTD，<span style=\"line-height: 1.4em;\">美团和大众点评的合称，以下简称“新美大”）在对</span><span style=\"line-height: 1.4em;\">外宣布最新一次融</span><span style=\"line-height: 1.4em;\">资金额超过33亿美元之后，还对外放出了关于“新美大”投资事项及条件：</span><span style=\"line-height: 1.4em;\">本次转让股份额度</span><span style=\"line-height: 1.4em;\">共计7150511.13美元，占股0.04767%，</span><span style=\"line-height: 1.4em;\">估值以市场上新美大最新估值投前150亿美元为准。</span><br /></p>  <p style=\"white-space: normal;\">据亿欧网了解，所有资料在得到新美大投资方授权后呈现。这是潜力股网站公开发文时表述的部分内容，这说明，新美大释放的这部分股份是其投资方对方放出的股份，类似众筹。</p>  <p style=\"white-space: normal;\">于是乎，我以为自己的春天来了，也可以做一回新美大的微股东了。天生数学缺陷的自己，核算着自己账户存款和新美大每股的价钱，一顿狂算之后发现，自己是不是傻。按照估值直接计算即可，为何还按照新美大上文中的0.04767%股份计算。</p>  <p style=\"white-space: normal;\">明眼人一看就知道，是的，如果占有“新美大”0.01%的股份需要150万美金，更形象点就是新美大1%的股份需要1.5亿美元的投资，哈哈，暗讽自己一下，简直穷屌了！</p>  <p style=\"white-space: normal;\">不过话说，新美大此次对外散户（中小投资机构）释放股份还是比较迫切的，作为一个媒体人，我已经接到多个从业者转来的新美大股份转让的规则和明细，只是没钱没办法。</p>  <p style=\"white-space: normal;\"><strong>网上对新美大股份转让的内容如下：</strong></p>  <p style=\"white-space: normal;\">“新美大”：1+1&gt;2，打造宇宙第一O2O。<span style=\"line-height: 1.4em;\">2015年10 月8日，大众点评网与美团网宣布达成战略合并，宇宙第一O2O自此诞</span><span style=\"line-height: 1.4em;\">生。</span></p>  <p style=\"white-space: normal;\">合并后点评美团优势互补：点评在一二线城市拥有绝对优势，美团强于三四线城市的覆盖，二者合计占领O2O市场80%份额，拥有行业绝对话语权。</p>  <p style=\"white-space: normal;\"><span style=\"line-height: 1.4em;\">新美大在收入模式上将会逐渐趋于融合，广告、交易抽成和服务佣金等三大核心盈利渠道将会被新公司加强，构成新美大“钱袋子”的底仓。</span><span style=\"line-height: 1.4em;\">同时通过深耕垂直行业，深入交易和服务的全流程，帮助商家进行营销、提升效率、优化运营，为商家提供选址、融资、采购等增值服务，开拓出新的收入渠道。</span><span style=\"line-height: 1.4em;\">也就是说以后要找商户大数据、做精准营销、优化运营、选址、找采购商，都可以找新美大。</span></p>  <p style=\"white-space: normal;\"><span style=\"line-height: 1.4em;\">其投资方式：</span><span style=\"line-height: 1.4em;\">美团、大众点评合并后的新美大公司接受的投资基金规模在约7亿人民币；</span><span style=\"line-height: 1.4em;\">投资期限3+2年；</span><span style=\"line-height: 1.4em;\">认购起点100万起，10万递增，认购费1%；</span><span style=\"line-height: 1.4em;\">管理费1%/年，投顾费1%/年。</span></p>  <p style=\"white-space: normal;\"><strong>新美大的投资亮点为：</strong></p>  <p style=\"white-space: normal;\">1）增长空间巨大：中国本地生活市场规模巨大，目前本地生活O2O仍处在早期发展阶段，市场增长空间巨大；</p>  <p style=\"white-space: normal;\">2）行业统治地位：点评美团合并将使公司拥有行业中的绝对统治地位，市场占有率达到80%；</p>  <p style=\"white-space: normal;\">3）优势互补：合并后，两个平台协同效应显现，营运成本将显著降低，营收显著增加；</p>  <p style=\"white-space: normal;\">4）豪华团队：合并后的点评美团将集合本土O2O方面最资深的从业者；</p>  <p style=\"white-space: normal;\">5）强大股东资源：腾讯、红杉、DST、新加坡主权投资基金等强大股东资源将为公司提供业务拓展、营销渠道等全方位支持，机构认同度高；</p>  <p style=\"white-space: normal;\">6）估值折让优势：美团和大众点评合并前各自估值分别为（120亿+70亿美元），本轮融资超过30亿美元，投前估值150亿美元，较前一轮估值有所折让，为本轮投资者进入提高收益空间；</p>  <p style=\"white-space: normal;\">7）IPO退出预期：合并后，规模效应显现，公司盈利拐点提前到来，预计2—3年内登陆美国纳斯达克，实现IPO退出。</p>  <p style=\"white-space: normal;\"><strong>在新美大形势一片大好的呼声中，<a href=\"http://www.iyiou.com/p/23915\" target=\"_blank\">业界也有人并不太看好</a>：</strong></p>  <p style=\"white-space: normal;\">&nbsp;新美大（CIP）获得了30亿美元的融资，行业内对新美大（CIP）持乐观态度成为了主流。但实际上，新美大（CIP）以150亿美元的投前估值进行流血融资，30亿美元的融资额依然不够，屌丝群体多，单个用户产生的交易额低，在细分领域的领先优势也随时会被改写。</p>  <p style=\"white-space: normal;\">新美大对外融资时，以市销率（P/S）和P/GMV两种估值模型预测未来的市值，得出了夸张的数据，是典型的放卫星。考虑到行业属性、对标公司、市场格局等因素，等到2018年上市时，新美大（CIP）的市值在300亿美元左右更为理性。</p>  <p style=\"white-space: normal;\">美团最美好的时间是2012-2014这三年。2015年，巨额亏损的美团向投资方做了妥协，和大众点评的合并成为了理想主义和现实主义的分界线。在O2O价格战无门槛无绝期的情况下，新美大未来的结局为理性估值上市或再次合并，在BAT之外，新美大（CIP）届时的市值应该在京东之下，成为下一个阿里巴巴会是一个难以触及的梦想。</p>  <p style=\"white-space: normal;\"><span style=\"line-height: 1.4em;\">就此，我查看了截至到北京时间2016年1月23日下午三点</span><span style=\"line-height: 1.4em;\">整BAT、京东等的市值，阿里的市值为1768.41亿美元，腾讯的市</span><span style=\"line-height: 1.4em;\">值为</span><span style=\"line-height: 1.4em;\">13071.46亿港元（约合1681亿美元），百度</span><span style=\"line-height: 1.4em;\">的市值为</span><span style=\"line-height: 1.4em;\">598.75亿美元，京</span><span style=\"line-height: 1.4em;\">东市值</span><span style=\"line-height: 1.4em;\">372.80亿美元，奇虎36</span><span style=\"line-height: 1.4em;\">0的市值为</span><span style=\"line-height: 1.4em;\">87.97亿美元，聚美优品市值为</span><span style=\"line-height: 1.4em;\">9.37亿美元。</span></p>  <p style=\"white-space: normal;\"><span style=\"line-height: 1.4em;\">且据知情人士对亿欧网透露：2011年阿里入股美团前，王兴还剩50%的股份，阿里那一轮给美团的估值为2-3亿美元，融资4000多万美元，让出15%的股份，之后王兴剩42.5%股份；到2014年年终美团以20-30亿美元的估值融资近3亿美元，王兴还剩38%股份；2015年1月美团估值70亿美元获得7亿美元融资，王兴在美团还剩34%股份；2015年10月，美团大众点评合并，差不多按1:1的比例，王兴在集团里面的股份降到20%以下；2015年12月，新公司估值180亿获得腾讯领投的28亿美元，王兴占美团的股份降到15%左右。</span></p>  <p style=\"white-space: normal;\"><span style=\"line-height: 1.4em;\">从50%的股份占比降到15%经过了5年的时间，美团也从众多的团购网站中成长为一个本地生活服务巨头。</span></p>  <p style=\"white-space: normal;\"><span style=\"line-height: 1.4em;\">啊……还是没钱投美团啊！</span></p>  <p><span style=\"color: rgb(192, 0, 0);\">本文作者小瓶盖，亿欧网专栏作者；微信：canying1000（添加时请注明“姓名-公司-职务”方便备注）；转载请注明作者姓名和“来源：亿欧网”；文章内容系作者个人观点，不代表亿欧网对观点赞同或支持。</span></p>  <p class=\"PlayTourSubmit\"><img style=\"width:60px; height:60px\" src=\"http://www.iyiou.com/Public/WWW/images/shang.png\" /></p>  <input name=\"PlayTourPrice\" id=\"PlayTourPrice\" type=\"hidden\" value=\"10\" />  <p class=\"PlayTourImg\" style=\"display:none\"></p>  <p class=\"PlayTourMemo\" style=\"text-align:center;text-indent:0;margin-top:0;display:none\">扫码给TA打赏</p>";
 
@@ -134,7 +144,7 @@ public class KuafuCrawlerTest extends BaseTest {
     }
 
     @Test
-    public void imgParseTest() {
+    public void aTagParseTest() {
 
         String url = "<a href='http://tech.ifeng.com/listpage/803/2/list.shtml?cflag=1&cursorId=41564925'></a>";
         // String urlPattern = "(http://www\\.hupogu\\.com/topics/\\d+)";
@@ -155,6 +165,19 @@ public class KuafuCrawlerTest extends BaseTest {
     }
 
     @Test
+    public void imgParseTest() {
+        String html = "<div>\\n <p>小编有一段时间没有给大家说说高血压降压药物了，今天打算借着两种降压药物给大家说一说高血压用药的一些细节。实际上，我们治疗高血压的主要目的是最大限度的降低心血管发病和死亡的总危险。由于心血管病危险性与血压之间的相关呈连续性，因此抗高血压治疗的目标是将血压恢复至正常水平。</p>\\n <p>今天要说的两种降压药物是马来酸依那普利与非洛地平，马来酸依那普利属于血管紧张素转换酶抑制剂，功能主要用于各期原发型高血压、肾性高血压、充血性心力衰竭等的治疗。非洛地平属于二氢砒啶类钙拮抗剂，主要用于轻、中度原发性高血压的治疗。</p>\\n <div class=\\\"pgc-img\\\">\\n  <img src=\\\"http://p9.pstatp.com/large/pgc-image/1528869549146363716b52d\\\" img_width=\\\"323\\\" img_height=\\\"201\\\" alt=\\\"马来酸依那普利与非洛地平，高血压用药细节要注意！\\\" inline=\\\"0\\\" />\\n  <p class=\\\"pgc-img-caption\\\"></p>\\n </div>\\n <p>马来酸依那普利常用剂量为每日10~40mg，分2~3次服。原发型高血压：每次20mg，每日1次。充血性心力衰竭和肾性高血压：每日10~40mg，起始量为每日10mg，剂量视治疗效果调节，一般每次20mg，每日1次。其不良反应较少。少数出现干咳、眩晕、头痛、疲乏、腹泻、皮疹、味觉障碍、均轻微、短暂。罕有神经血管性水肿，如出现应立即停用，并迅速就医。</p>\\n <p>非洛地平起始剂量2.5mg，一日2次，或遵医嘱。常用维持剂量每日为5mg 或10mg，必要时剂量可进一步增加，或加用其它降压药。服药应早晨用水吞服。非洛地平和其它钙拮抗药相同，在某些病人身上会导致面色潮红、头痛、头晕、心悸和疲劳，这些反应大部分具有剂量依赖性，而且是在剂量增加后开始的短时间内出现，是暂时的，应用时间延长后消失。另外非洛地平可引起与剂量有关的踝肿、牙龈或牙周炎，患者用药后可能会引起轻微的牙龈肿大。在极少数病人中可能会引起显著的低血压伴心动过速，这在易感个体可能会引起心肌缺氧。</p>\\n <div class=\\\"pgc-img\\\">\\n  <img src=\\\"http://p1.pstatp.com/large/pgc-image/1528869620791a29f93ee74\\\" img_width=\\\"800\\\" img_height=\\\"800\\\" alt=\\\"马来酸依那普利与非洛地平，高血压用药细节要注意！\\\" inline=\\\"0\\\" />\\n  <p class=\\\"pgc-img-caption\\\"></p>\\n </div>\\n <p>因为高血压患者的年龄、病程、血压水平、并发症情况以及对降压药反应和健康状况等均有很大的差异，所以降压药的选用要根据患者的个体状况，药物的作用、代谢、不良反应和药物相互作用，采用个体化给药。</p>\\n <p>在使用降压药的过程中，应该注意以下几点：</p>\\n <p>1、不宜时服时停：有的患者用降压药时服时停，血压一高吃几片，血压一降，马上停药，导致血压反弹。较严重的高血压，可以说是一种终身疾病，应长期坚持服药；</p>\\n <p>2、不宜睡前服药：睡前服药，血压下降，血流变缓慢，血液粘稠度升高，极容易导致血栓形成，引发卒中或心肌梗死。</p>\\n <p>3、不宜降压过快：有些人一旦发现高血压，恨不得立刻就把血压降下来，随意加大用药剂量，这样极容易发生意外；</p>\\n <p>4、不宜频繁换药：降压作用和降压机制不同，选择的降压药物不合适，或者用法、用量不对，降压作用就不明显。因此，高血压患者的用药方案应在医生指导下进行。</p>\\n <div class=\\\"pgc-img\\\">\\n  <img src=\\\"http://p9.pstatp.com/large/pgc-image/1528869679203859cd4fff6\\\" img_width=\\\"1280\\\" img_height=\\\"853\\\" alt=\\\"马来酸依那普利与非洛地平，高血压用药细节要注意！\\\" inline=\\\"0\\\" />\\n  <p class=\\\"pgc-img-caption\\\"></p>\\n </div>\\n <p>如果你喜欢我们的文章，请关注我们的微信号“<strong>好心舒冠心病管家</strong>”，您的关注是我们前进的动力，您的留言是我们改进的目标。关注我们。将会为您提供更多更好的文章。</p>\\n</div>";
+        LOGGER.info(html);
+        BaseImgCrawlerFilter filter = new BaseImgCrawlerFilter();
+        Page page = new Page();
+        page.setRawText(html);
+        page.setRequest(new Request("https://www.toutiao.com/item/6566383494182732295/"));
+        filter.doFilter(page);
+
+    }
+
+
+    @Test
     public void groupIndexMatcher() {
         String baseUrl = "http://www.techweb.com.cn/internet/2016-02-02/2272978_2.shtml";
         String pStr = "(http://www\\.techweb\\.com\\.cn/\\w+/\\d{4}-\\d{2}-\\d{2}/\\d+_(\\d+).shtml)";
@@ -169,7 +192,7 @@ public class KuafuCrawlerTest extends BaseTest {
 
     @Test
     public void downloaderTest() {
-        Downloader downloader = new HtmlUnitHttpClientDownloader();
+        Downloader downloader = new ToutiaoDownloader();
         Task task = new Task() {
 
             @Override
@@ -185,13 +208,13 @@ public class KuafuCrawlerTest extends BaseTest {
             }
 
         };
-        Page page = downloader.download(new Request("http://sme.ce.cn/jrtt/index.shtml"), task);
+        Page page = downloader.download(new Request("https://www.toutiao.com/c/user/6720614628/#mid=6720614628"), task);
         System.out.println(page.getRawText());
     }
 
     @Test
     public void imageEncodeTest() {
-        String html = "<p style=\"margin-right: 0px; margin-bottom: 15px; margin-left: 0px; padding: 0px; border: 0px; font-size: 15px; vertical-align: baseline; color: rgb(51, 51, 51); font-family: arial, sans-serif;\"><img alt=\"\" src=\"http://7xjsga.com2.z0.glb.qiniucdn.com/uploadfile/2016/0323/20160323010811258.jpg?imageView2/2/q/90/w/760\" style=\"width: 760px; height: 475px;\" /></p>";
+        String html = "<div>\\n <p>小编有一段时间没有给大家说说高血压降压药物了，今天打算借着两种降压药物给大家说一说高血压用药的一些细节。实际上，我们治疗高血压的主要目的是最大限度的降低心血管发病和死亡的总危险。由于心血管病危险性与血压之间的相关呈连续性，因此抗高血压治疗的目标是将血压恢复至正常水平。</p>\\n <p>今天要说的两种降压药物是马来酸依那普利与非洛地平，马来酸依那普利属于血管紧张素转换酶抑制剂，功能主要用于各期原发型高血压、肾性高血压、充血性心力衰竭等的治疗。非洛地平属于二氢砒啶类钙拮抗剂，主要用于轻、中度原发性高血压的治疗。</p>\\n <div class=\\\"pgc-img\\\">\\n  <img src=\\\"http://p9.pstatp.com/large/pgc-image/1528869549146363716b52d\\\" img_width=\\\"323\\\" img_height=\\\"201\\\" alt=\\\"马来酸依那普利与非洛地平，高血压用药细节要注意！\\\" inline=\\\"0\\\" />\\n  <p class=\\\"pgc-img-caption\\\"></p>\\n </div>\\n <p>马来酸依那普利常用剂量为每日10~40mg，分2~3次服。原发型高血压：每次20mg，每日1次。充血性心力衰竭和肾性高血压：每日10~40mg，起始量为每日10mg，剂量视治疗效果调节，一般每次20mg，每日1次。其不良反应较少。少数出现干咳、眩晕、头痛、疲乏、腹泻、皮疹、味觉障碍、均轻微、短暂。罕有神经血管性水肿，如出现应立即停用，并迅速就医。</p>\\n <p>非洛地平起始剂量2.5mg，一日2次，或遵医嘱。常用维持剂量每日为5mg 或10mg，必要时剂量可进一步增加，或加用其它降压药。服药应早晨用水吞服。非洛地平和其它钙拮抗药相同，在某些病人身上会导致面色潮红、头痛、头晕、心悸和疲劳，这些反应大部分具有剂量依赖性，而且是在剂量增加后开始的短时间内出现，是暂时的，应用时间延长后消失。另外非洛地平可引起与剂量有关的踝肿、牙龈或牙周炎，患者用药后可能会引起轻微的牙龈肿大。在极少数病人中可能会引起显著的低血压伴心动过速，这在易感个体可能会引起心肌缺氧。</p>\\n <div class=\\\"pgc-img\\\">\\n  <img src=\\\"http://p1.pstatp.com/large/pgc-image/1528869620791a29f93ee74\\\" img_width=\\\"800\\\" img_height=\\\"800\\\" alt=\\\"马来酸依那普利与非洛地平，高血压用药细节要注意！\\\" inline=\\\"0\\\" />\\n  <p class=\\\"pgc-img-caption\\\"></p>\\n </div>\\n <p>因为高血压患者的年龄、病程、血压水平、并发症情况以及对降压药反应和健康状况等均有很大的差异，所以降压药的选用要根据患者的个体状况，药物的作用、代谢、不良反应和药物相互作用，采用个体化给药。</p>\\n <p>在使用降压药的过程中，应该注意以下几点：</p>\\n <p>1、不宜时服时停：有的患者用降压药时服时停，血压一高吃几片，血压一降，马上停药，导致血压反弹。较严重的高血压，可以说是一种终身疾病，应长期坚持服药；</p>\\n <p>2、不宜睡前服药：睡前服药，血压下降，血流变缓慢，血液粘稠度升高，极容易导致血栓形成，引发卒中或心肌梗死。</p>\\n <p>3、不宜降压过快：有些人一旦发现高血压，恨不得立刻就把血压降下来，随意加大用药剂量，这样极容易发生意外；</p>\\n <p>4、不宜频繁换药：降压作用和降压机制不同，选择的降压药物不合适，或者用法、用量不对，降压作用就不明显。因此，高血压患者的用药方案应在医生指导下进行。</p>\\n <div class=\\\"pgc-img\\\">\\n  <img src=\\\"http://p9.pstatp.com/large/pgc-image/1528869679203859cd4fff6\\\" img_width=\\\"1280\\\" img_height=\\\"853\\\" alt=\\\"马来酸依那普利与非洛地平，高血压用药细节要注意！\\\" inline=\\\"0\\\" />\\n  <p class=\\\"pgc-img-caption\\\"></p>\\n </div>\\n <p>如果你喜欢我们的文章，请关注我们的微信号“<strong>好心舒冠心病管家</strong>”，您的关注是我们前进的动力，您的留言是我们改进的目标。关注我们。将会为您提供更多更好的文章。</p>\\n</div>";
         String resultHtml = HtmlParserUtils.parser(html, TagParserEnum.img_parser_url);
         LOGGER.info(resultHtml);
     }
@@ -208,7 +231,7 @@ public class KuafuCrawlerTest extends BaseTest {
         xpathSelectors.add("//div[@class='tag-editor']");
         params.put("excludeTag", Arrays.asList("style"));
         params.put("excludeXpath", xpathSelectors);
-        String result = (String) converter.converter(content, params);
+        String result = (String) converter.converter(null, content, params);
         LOGGER.info(result);
     }
 }

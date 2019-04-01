@@ -15,11 +15,6 @@
 		},
 
 		{
-			"type" : "lion",
-			"value" : "merchant-today-news-frontground-service.crawler.trigger.canyin168"
-		},
-
-		{
 			"type" : "time",
 			"value" : "0 0 3 * * ?"
 		}
