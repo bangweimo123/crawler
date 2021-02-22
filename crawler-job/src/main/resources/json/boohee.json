@@ -1,0 +1,50 @@
+{
+	"comment" : "薄荷网",
+	"domainTag" : "boohee",
+	"pageProcessor": "boohee",
+	"crawlerBaseInfo" :
+	{
+		"baseUrl" : "http://i.boohee.com/shiwu/1",
+		"threadCount" : 20
+	},
+
+	"crawlerTrigger" :
+	[
+		{
+			"type" : "simple_once",
+			"value" : false
+		},
+
+		{
+			"type" : "lion",
+			"value" : "merchant-today-news-frontground-service.crawler.trigger.138job"
+		},
+
+		{
+			"type" : "time",
+			"value" : "0 0 2 * * ?"
+		}
+	],
+
+	"site" :
+	{
+		"charset" : "UTF-8",
+		"timeOut" : 30000
+	},
+
+	"urlBuilder" :
+	{
+		"baseUrlFilter" : "(http://i\\.boohee\\.com/shiwu/)(\\d+)"
+	},
+
+	"fieldBuilder" :
+	[
+		{
+			"fieldName" : "name",
+			"xpathSelector" : "//h2[@class='crumb']/text()",
+			"isList" : false,
+			"converter" : "stringSplitConverter",
+			"converterParam" : "\\?,|"
+		}
+	]
+}

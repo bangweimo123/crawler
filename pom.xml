@@ -1,62 +1,38 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.lifesense.kuafu</groupId>
-    <artifactId>kuafu-crawler</artifactId>
+    <groupId>cn.mbw</groupId>
+    <artifactId>crawler</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>kuafu-crawler</name>
+    <name>crawler</name>
     <packaging>pom</packaging>
-    <parent>
-        <groupId>com.lifesense.support</groupId>
-        <artifactId>basesupport-parent</artifactId>
-        <version>1.0.5-SNAPSHOT</version>
-    </parent>
     <properties>
-        <kuafu-crawler.version>0.0.1-SNAPSHOT</kuafu-crawler.version>
         <webmagic.version>0.5.2</webmagic.version>
         <log4j.version>2.3</log4j.version>
     </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.lifesense.base</groupId>
-                <artifactId>lifesense-commons</artifactId>
-                <version>${lifesense.commons.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.springframework</groupId>
-                <artifactId>spring-context-support</artifactId>
-                <version>${spring.version}</version>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>5.2.10.RELEASE</version>
+                <scope>import</scope>
+                <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${spring.version}</version>
+                <groupId>cn.mbw</groupId>
+                <artifactId>crawler-core</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>${spring.version}</version>
+                <groupId>cn.mbw</groupId>
+                <artifactId>crawler-logic</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.lifesense.kuafu</groupId>
-                <artifactId>kuafu-crawler-core</artifactId>
-                <version>${kuafu-crawler.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.lifesense.kuafu</groupId>
-                <artifactId>kuafu-crawler-logic</artifactId>
-                <version>${kuafu-crawler.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.lifesense.kuafu</groupId>
-                <artifactId>kuafu-crawler-encode</artifactId>
-                <version>${kuafu-crawler.version}</version>
+                <groupId>cn.mbw</groupId>
+                <artifactId>crawler-encode</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>us.codecraft</groupId>
@@ -73,11 +49,16 @@
                 <artifactId>webmagic-extension</artifactId>
                 <version>${webmagic.version}</version>
             </dependency>
+            <dependency>
+                <groupId>us.codecraft</groupId>
+                <artifactId>webmagic-selenium</artifactId>
+                <version>${webmagic.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
-                <version>1.2.7</version>
+                <version>1.2.72</version>
             </dependency>
 
             <dependency>
@@ -89,7 +70,7 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.4</version>
+                <version>2.6</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -97,9 +78,9 @@
                 <version>3.7</version>
             </dependency>
             <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>3.2.1</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>4.4</version>
             </dependency>
             <dependency>
                 <groupId>net.sourceforge.htmlunit</groupId>
@@ -112,7 +93,7 @@
                 <version>1.4.01</version>
             </dependency>
             <dependency>
-                <groupId>com.lifesense.support</groupId>
+                <groupId>cn.mbw.support</groupId>
                 <artifactId>filesystem-support</artifactId>
                 <version>2.0.7-SNAPSHOT</version>
             </dependency>
@@ -154,13 +135,19 @@
                 <version>${log4j.version}</version>
                 <scope>runtime</scope>
             </dependency>
+            <dependency>
+                <groupId>com.dianping.cat</groupId>
+                <artifactId>cat-client</artifactId>
+                <version>3.0.5</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>kuafu-crawler-job</module>
-        <module>kuafu-crawler-core</module>
-        <module>kuafu-crawler-logic</module>
-        <module>kuafu-crawler-encode</module>
+        <module>crawler-job</module>
+        <module>crawler-core</module>
+        <module>crawler-logic</module>
+        <module>crawler-encode</module>
+        <module>crawler-selenium</module>
     </modules>
 </project>

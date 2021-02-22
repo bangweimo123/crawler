@@ -1,0 +1,132 @@
+{
+  "comment": "薄荷网",
+  "domainTag": "boohee",
+  "pageProcessor": "boohee",
+  "crawlerBaseInfo": {
+    "baseUrl": "http://i.boohee.com/shiwu/419870",
+    "threadCount": 80,
+    "resultHandler": "booheeResultHandler",
+    "listener": "boohee"
+  },
+  "customParams": {
+    "size": 10000,
+    "max": 420001
+  },
+  "crawlerTrigger": [
+    {
+      "type": "simple_once",
+      "value": false
+    },
+    {
+      "type": "time",
+      "value": "0 0 10 * * ?"
+    }
+  ],
+  "site": {
+    "charset": "UTF-8",
+    "timeOut": 300,
+    "cycleRetryTimes": 15,
+    "userAgent": "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)"
+  },
+  "urlBuilder": {
+    "baseUrlFilter": "(http://i\\.boohee\\.com/shiwu/)(\\d+)"
+  },
+  "fieldBuilder": [
+    {
+      "fieldName": "fullName",
+      "xpathSelector": "//div[@class='widget-group-content container']/h2[@class='crumb']/text()",
+      "isList": false,
+      "converter": "stringTrimConverter",
+      "script": "function dataConverter(data){ if(null==data){return data}; return data.substring(4,data.length)}"
+    },
+    {
+      "fieldName": "enName",
+      "xpathSelector": "//div[@class='crowd-type']/a[1]/@href",
+      "isList": false,
+      "converter": "stringTrimConverter"
+    },
+    {
+      "fieldName": "rename",
+      "xpathSelector": "//ul[@class='basic-infor']/li[1]/text()",
+      "isList": false,
+      "converter": "stringTrimConverter"
+    },
+    {
+      "fieldName": "hot",
+      "xpathSelector": "//span[@class='stress red1']/text()",
+      "isList": false,
+      "converter": "stringTrimConverter"
+    },
+    {
+      "fieldName": "type",
+      "xpathSelector": "//ul[@class='basic-infor']/li/strong/a/text()",
+      "isList": false,
+      "converter": "stringTrimConverter"
+    },
+    {
+      "fieldName": "nutritionRedGreen",
+      "xpathSelector": "//div[@class='clearfix']/ul[@class='basic-infor']/li/img/@src",
+      "isList": false,
+      "converter": "stringTrimConverter"
+    },
+    {
+      "fieldName": "appraise",
+      "xpathSelector": "//div[@class='widget-food-detail pull-left']/div[@class='content']/p/text()",
+      "isList": false,
+      "converter": "stringTrimConverter"
+    },
+    {
+      "fieldName": "nutritionInfo",
+      "xpathSelector": "//div[@class='widget-food-detail pull-left']/div[@class='nutr-tag margin10']/div[@class='content']",
+      "isList": false,
+      "converter": "booheeNutritionConverter"
+    },
+    {
+      "fieldName": "unit",
+      "xpathSelector": "//div[@class='widget-unit']/div[@class='content']",
+      "isList": false,
+      "converter": "booheeUnitConverter"
+    },
+    {
+      "fieldName": "image",
+      "xpathSelector": "//div[@class='food-pic pull-left']/a[@class='lightbox']/img/@src",
+      "isList": false,
+      "converter": "imgConverter"
+    },
+    {
+      "fieldName": "relations",
+      "xpathSelector": "//div[@class='widget-relative']/div[@class='content']/ul[@class='list']",
+      "isList": false,
+      "converter": "booheeRelationConverter"
+    },
+    {
+      "fieldName": "mainSource",
+      "xpathSelector": "//div[@class='widget-more']/div[@class='content'][1]",
+      "isList": false,
+      "converter": "booheeSourceConverter"
+    },
+    {
+      "fieldName": "subSource",
+      "xpathSelector": "//div[@class='widget-more']/div[@class='content'][2]",
+      "isList": false,
+      "converter": "booheeSourceConverter"
+    },
+    {
+      "fieldName": "subSource2",
+      "xpathSelector": "//div[@class='widget-more']/div[@class='content'][3]",
+      "isList": false,
+      "converter": "booheeSourceConverter"
+    },
+    {
+      "fieldName": "cookMethod",
+      "xpathSelector": "//div[@class='widget-more']/div[@class='content']/p",
+      "isList": false
+    },
+    {
+      "fieldName": "hotUnit",
+      "xpathSelector": "//span[@id='food-calory']/text()",
+      "isList": false,
+      "converter": "stringTrimConverter"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:apollo="http://www.ctrip.com/schema/apollo" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+                            http://www.ctrip.com/schema/apollo http://www.ctrip.com/schema/apollo.xsd
+                            http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+                            http://code.alibabatech.com/schema/dubbo http://oss.aliyuncs.com/yoyu-img/edHkXSuJy.xsd">
+    <apollo:config/>
+    <!-- 中间件的namespace -->
+    <apollo:config namespaces="lx-arch.dubbo,lx-arch.redis" order="1"/>
+
+    <context:component-scan base-package="com.lifesense.*"/>
+    <context:annotation-config/>
+    <bean id="springLocator" class="cn.mbw.crawler.core.processor.spring.SpringLocator">
+    </bean>
+    <!-- dubbo基本配置 -->
+    <dubbo:application name="kuafu-crawler-service-consumer" />
+    <dubbo:registry id="default" protocol="zookeeper" address="${dubbo.zookeeper.url}" check="false" ></dubbo:registry>
+    <dubbo:registry id="newRegistry" protocol="zookeeper" address="${dubbo.new.zookeeper.url}" check="false" ></dubbo:registry>
+    <dubbo:protocol name="dubbo" threads="${dubbo.threads}" port="${dubbo.port}" host="${dubbo.host}" />
+
+    <dubbo:reference id="crawlerDataService" interface="com.lifesense.soa.contentmanagement.api.CrawlerDataService"
+                     check="false"/>
+
+</beans>

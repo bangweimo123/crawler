@@ -1,0 +1,65 @@
+{
+  "comment": "薄荷网",
+  "domainTag": "boohee",
+  "pageProcessor": "boohee",
+  "crawlerBaseInfo": {
+    "baseUrl": "http://i.boohee.com/shiwu/",
+    "threadCount": 200,
+    "resultHandler": "booheeResultHandler",
+    "listener": "boohee"
+  },
+  "customParams": {
+    "size": 200
+  },
+  "crawlerTrigger": [
+    {
+      "type": "simple_once",
+      "value": false
+    },
+    {
+      "type": "time",
+      "value": "0 0 10 * * ?"
+    }
+  ],
+  "site": {
+    "charset": "UTF-8",
+    "timeOut": 10000,
+    "cycleRetryTimes": 15,
+    "userAgent": "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)"
+  },
+  "urlBuilder": {
+    "baseUrlFilter": "(http://i\\.boohee\\.com/shiwu/)(\\d+)"
+  },
+  "fieldBuilder": [
+    {
+      "fieldName": "fullName",
+      "xpathSelector": "//div[@class='widget-group-content container']/h2[@class='crumb']/text()",
+      "isList": false,
+      "converter": "stringTrimConverter",
+      "script": "function dataConverter(data){ if(null==data){return data}; return data.substring(4,data.length)}"
+    },
+    {
+      "fieldName": "hotUnit",
+      "xpathSelector": "//span[@id='food-calory']/text()",
+      "isList": false,
+      "converter": "stringTrimConverter"
+    },
+    {
+      "fieldName": "subSource2",
+      "xpathSelector": "//div[@class='widget-more']/div[@class='content'][3]",
+      "isList": false,
+      "converter": "booheeSourceConverter"
+    },
+    {
+      "fieldName": "cookMethod",
+      "xpathSelector": "//div[@class='widget-more']/div[@class='content']/p",
+      "isList": false
+    },
+    {
+      "fieldName": "hotUnit",
+      "xpathSelector": "//span[@id='food-calory']/text()",
+      "isList": false,
+      "converter": "stringTrimConverter"
+    }
+  ]
+}
